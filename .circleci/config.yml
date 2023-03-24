@@ -1,0 +1,42 @@
+version: 2.1
+orbs:
+  architect: giantswarm/architect@4.28.1
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - architect/push-to-app-catalog:
+          context: architect
+          name: "push-to-app-catalog"
+          app_catalog: "giantswarm-catalog"
+          app_catalog_test: "giantswarm-test-catalog"
+          chart: "karpenter"
+          filters:
+            # Trigger the job also on git tag.
+            tags:
+              only: /^v.*/
+              
+      - architect/push-to-app-catalog:
+          context: architect
+          name: "push-to-default-app-catalog"
+          app_catalog: "default-catalog"
+          app_catalog_test: "default-test-catalog"
+          chart: "karpenter"
+          filters:
+            # Trigger the job also on git tag.
+            tags:
+              only: /^v.*/
+
+      - architect/integration-test:
+          context: architect
+          name: "basic-integration-test"
+          test-dir: "integration/test/basic"
+          install-app-platform: true
+          filters:
+            # Do not trigger the job on merge to master.
+            branches:
+              ignore:
+                - master
+          requires:
+            - push-to-app-catalog
