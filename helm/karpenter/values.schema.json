@@ -64,6 +64,14 @@
                 }
             }
         },
+        "aws": {
+            "type": "object",
+            "properties": {
+                "accountID": {
+                    "type": "string"
+                }
+            }
+        },
         "baseDomain": {
             "type": "string"
         },

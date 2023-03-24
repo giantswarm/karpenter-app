@@ -194,3 +194,8 @@ Flatten the stderr logging outputs from args provided
 {{- end -}}
 {{ $paths | join ", " }}
 {{- end -}}
+
+
+{{- define "giantswarm.irsa.annotation" -}}
+eks.amazonaws.com/role-arn: arn:aws:iam::{{ .Values.aws.accountID }}:role/{{ .Values.clusterID }}-Karpenter-Role
+{{- end -}}

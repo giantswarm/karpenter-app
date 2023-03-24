@@ -213,3 +213,5 @@ settings:
 # Fields managed by cluster-user-values
 clusterID: ""
 baseDomain: ""
+aws:
+  accountID: ""
