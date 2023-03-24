@@ -64,6 +64,12 @@
                 }
             }
         },
+        "baseDomain": {
+            "type": "string"
+        },
+        "clusterID": {
+            "type": "string"
+        },
         "controller": {
             "type": "object",
             "properties": {
