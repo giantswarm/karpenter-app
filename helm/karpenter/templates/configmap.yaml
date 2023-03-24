@@ -10,4 +10,4 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 data:
-  {{- list .Values.settings "" | include "flattenSettings" | indent 2 }}
+  {{- list .Values.settings "" | include "flattenSettings" | indent 2 | replace "CLUSTER_NAME" .Values.clusterID | replace "CLUSTER_ENDPOINT" (printf "%s.%s" "http://api" .Values.baseDomain) }}
