@@ -66,3 +66,10 @@ Attach the following policy to the role:
         }
     }
 ```
+
+### Create Nodepool
+
+Create a nodepool via happa or using kubectl-gs that uses all AZs and has min/max nodes set to 0
+```
+kubectl gs template nodepool --provider aws --organization giantswarm --cluster-name c2km7 --description karpenter --release 19.0.0 --availability-zones eu-central-1a,eu-central-1b,eu-central-1c  --nodes-min 0 --nodes-max 0 --aws-instance-type m5.large
+```
