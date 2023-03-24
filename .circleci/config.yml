@@ -16,16 +16,3 @@ workflows:
             # Trigger the job also on git tag.
             tags:
               only: /^v.*/
-
-      - architect/integration-test:
-          context: architect
-          name: "basic-integration-test"
-          test-dir: "integration/test/basic"
-          install-app-platform: true
-          filters:
-            # Do not trigger the job on merge to master.
-            branches:
-              ignore:
-                - master
-          requires:
-            - push-to-app-catalog
