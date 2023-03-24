@@ -1,7 +1,8 @@
 # Karpenter
 
+Upstream docs https://karpenter.sh/
 Chart for Karpenter https://github.com/aws/karpenter
-
+CRD source https://github.com/aws/karpenter/tree/main/pkg/apis/crds
 
 # AWS Role
 
