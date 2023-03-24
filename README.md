@@ -46,7 +46,13 @@ Attach the following policy to the role:
             "Effect": "Allow",
             "Resource": "*",
             "Sid": "ConditionalEC2Termination"
-        }
+        },
+        {
+            "Effect": "Allow",
+            "Action": "iam:PassRole",
+            "Resource": "n:aws:iam::<account-id>:role/gs-cluster-<cluster-id>-role-<nodepool-id>",
+            "Sid": "PassNodeIAMRole"
+        },
     ],
     "Version": "2012-10-17"
 }
