@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "karpenter.selectorLabels" . | nindent 8 }}
+        {{- include "karpenter.labels" . | nindent 8 }}
       {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
