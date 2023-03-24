@@ -97,7 +97,7 @@ extraVolumes: []
 
 # -- Array of extra K8s manifests to deploy
 extraObjects: []
-#- apiVersion: karpenter.k8s.aws/v1alpha1
+# - apiVersion: karpenter.k8s.aws/v1alpha1
 #  kind: AWSNodeTemplate
 #  metadata:
 #    name: default
