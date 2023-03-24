@@ -67,7 +67,7 @@ rules:
   - apiGroups: ["admissionregistration.k8s.io"]
     resources: ["mutatingwebhookconfigurations"]
     verbs: ["update"]
-    resourceNames: ["defaulting.webhook.karpenter.sh"]
+    resourceNames: ["defaulting.webhook.karpenter.k8s.aws"]
   {{- with .Values.additionalClusterRoleRules -}}
   {{ toYaml . | nindent 2 }}
   {{- end -}}
