@@ -6,10 +6,9 @@ CRD source https://github.com/aws/karpenter/tree/main/pkg/apis/crds
 
 # AWS Role
 
-Create a new Role named <cluster-id>-Karpenter-Role
-### Role
+### IAM Policy
 
-Attach the following policy to the role:
+Create a policy with the following name <cluster-id>-Karpenter:
 ```
 {
     "Statement": [
@@ -50,29 +49,41 @@ Attach the following policy to the role:
         {
             "Effect": "Allow",
             "Action": "iam:PassRole",
-            "Resource": "n:aws:iam::<account-id>:role/gs-cluster-<cluster-id>-role-<nodepool-id>",
+            "Resource": "arn:aws:iam::<account-id>:role/gs-cluster-<cluster-id>-role-*",
             "Sid": "PassNodeIAMRole"
-        },
+        }
     ],
     "Version": "2012-10-17"
 }
 ```
 
-### Trust Policy
+### Role
+
+Create a new Role named <cluster-id>-Karpenter-Role.
+
+- Use the following `Custom Trust Policy`, you can see the IRSA domain under `IAM > Identity Providers`
 ```
-    {
-        "Effect": "Allow",
-        "Principal": {
-            "Federated": "arn:aws:iam::111111111:oidc-provider/irsa.xxxx.baseDomain"
-        },
-        "Action": "sts:AssumeRoleWithWebIdentity",
-        "Condition": {
-            "StringEquals": {
-                "irsa.xxxx.baseDomain:sub": "system:serviceaccount:kube-system:karpenter"
+{
+	"Version": "2012-10-17",
+	"Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::<account-id>:oidc-provider/<irsa-domain>"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "<irsa-domain>:sub": "system:serviceaccount:kube-system:karpenter"
+                }
             }
         }
-    }
+	]
+}
 ```
+- Select `EC2 usecase`
+- Attach the previously created policy
+
 
 ### Create Nodepool
 
@@ -102,6 +113,12 @@ spec:
   #   - key: spotInstances
   #     value: "true"
   #     effect: "PreferNoSchedule"
+
+  # Make sure pods are not scheduled until cilium is running
+  startupTaints:
+  - key: node.cilium.io/agent-not-ready
+    value: "true"
+    effect: NoExecute
 
   # Labels are arbitrary key-values that are applied to all nodes
   labels:
