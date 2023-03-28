@@ -4,6 +4,14 @@ Upstream docs https://karpenter.sh/
 Chart for Karpenter https://github.com/aws/karpenter
 CRD source https://github.com/aws/karpenter/tree/main/pkg/apis/crds
 
+
+# Create Nodepool
+
+Create a nodepool via happa or using kubectl-gs that uses all AZs and has min/max nodes set to 0
+```
+kubectl gs template nodepool --provider aws --organization giantswarm --cluster-name c2km7 --description karpenter --release 19.0.0 --availability-zones eu-central-1a,eu-central-1b,eu-central-1c  --nodes-min 0 --nodes-max 0 --aws-instance-type m5.large
+```
+
 # AWS Role
 
 ### IAM Policy
@@ -84,15 +92,13 @@ Create a new Role named <cluster-id>-Karpenter-Role.
 - Select `EC2 usecase`
 - Attach the previously created policy
 
+# Create Provisioner
 
-### Create Nodepool
+We will create a provisioner that will reuse the Launch Template and Subnets of the previously created Nodepool.
 
-Create a nodepool via happa or using kubectl-gs that uses all AZs and has min/max nodes set to 0
-```
-kubectl gs template nodepool --provider aws --organization giantswarm --cluster-name c2km7 --description karpenter --release 19.0.0 --availability-zones eu-central-1a,eu-central-1b,eu-central-1c  --nodes-min 0 --nodes-max 0 --aws-instance-type m5.large
-```
+Replace `<CLUSTER_ID>` and `<NODEPOOL_ID>` in the following template to create the first provisioner. 
 
-### Create Provisioner
+Apply this resource on the workload cluster:
 
 ```
 apiVersion: karpenter.sh/v1alpha5
