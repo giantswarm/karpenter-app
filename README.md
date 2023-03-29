@@ -89,8 +89,8 @@ Create a new Role named `<cluster-id>-Karpenter-Role`.
 	]
 }
 ```
-- Select `EC2 usecase`
-- Attach the previously created policy
+
+- Attach the previously created policy (`<cluster-id>-Karpenter`)
 
 # Create Provisioner
 
