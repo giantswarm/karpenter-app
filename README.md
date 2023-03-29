@@ -9,14 +9,14 @@ CRD source https://github.com/aws/karpenter/tree/main/pkg/apis/crds
 
 Create a nodepool via happa or using kubectl-gs that uses all AZs and has min/max nodes set to 0
 ```
-kubectl gs template nodepool --provider aws --organization giantswarm --cluster-name c2km7 --description karpenter --release 19.0.0 --availability-zones eu-central-1a,eu-central-1b,eu-central-1c  --nodes-min 0 --nodes-max 0 --aws-instance-type m5.large
+kubectl gs template nodepool --provider aws --organization giantswarm --cluster-name <cluster-id> --description karpenter --release 19.0.0 --availability-zones eu-central-1a,eu-central-1b,eu-central-1c  --nodes-min 0 --nodes-max 0 --aws-instance-type m5.large
 ```
 
 # AWS Role
 
 ### IAM Policy
 
-Create a policy with the following name <cluster-id>-Karpenter:
+Create a policy with the following name `<cluster-id>-Karpenter`:
 ```
 {
     "Statement": [
@@ -67,7 +67,7 @@ Create a policy with the following name <cluster-id>-Karpenter:
 
 ### Role
 
-Create a new Role named <cluster-id>-Karpenter-Role.
+Create a new Role named `<cluster-id>-Karpenter-Role`.
 
 - Use the following `Custom Trust Policy`, you can see the IRSA domain under `IAM > Identity Providers`
 ```
