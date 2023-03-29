@@ -56,6 +56,17 @@ Create a policy with the following name `<cluster-id>-Karpenter`:
             "Sid": "ConditionalEC2Termination"
         },
         {
+            "Action": [
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+                "sqs:GetQueueUrl",
+                "sqs:ReceiveMessage"
+            ],
+            "Effect": "Allow",
+            "Resource": "<cluster-id>-termination-handler",
+            "Sid": "TerminationHandler"
+        },
+        {
             "Effect": "Allow",
             "Action": "iam:PassRole",
             "Resource": "arn:aws:iam::<account-id>:role/gs-cluster-<cluster-id>-role-*",
