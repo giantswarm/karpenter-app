@@ -16,7 +16,7 @@ kubectl gs template nodepool --provider aws --organization giantswarm --cluster-
 
 ### IAM Policy
 
-Create a policy with the following name <cluster-id>-Karpenter:
+Create a policy with the following name `<cluster-id>-Karpenter`:
 ```
 {
     "Statement": [
@@ -55,6 +55,17 @@ Create a policy with the following name <cluster-id>-Karpenter:
             "Sid": "ConditionalEC2Termination"
         },
         {
+            "Action": [
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+                "sqs:GetQueueUrl",
+                "sqs:ReceiveMessage"
+            ],
+            "Effect": "Allow",
+            "Resource": "<cluster-id>-termination-handler",
+            "Sid": "TerminationHandler"
+        },
+        {
             "Effect": "Allow",
             "Action": "iam:PassRole",
             "Resource": "arn:aws:iam::<account-id>:role/gs-cluster-<cluster-id>-role-*",
@@ -67,7 +78,7 @@ Create a policy with the following name <cluster-id>-Karpenter:
 
 ### Role
 
-Create a new Role named <cluster-id>-Karpenter-Role.
+Create a new Role named `<cluster-id>-Karpenter-Role`.
 
 - Use the following `Custom Trust Policy`, you can see the IRSA domain under `IAM > Identity Providers`
 ```
