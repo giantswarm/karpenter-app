@@ -13,6 +13,14 @@ Create a nodepool via happa or using kubectl-gs that uses all AZs and has min/ma
 kubectl gs template nodepool --provider aws --organization giantswarm --cluster-name <cluster-id> --description karpenter --release 19.0.0 --availability-zones eu-central-1a,eu-central-1b,eu-central-1c  --nodes-min 0 --nodes-max 0 --aws-instance-type m5.large
 ```
 
+# AWS Resources
+
+You can use the following URL to create the resources:
+
+https://eu-west-1.console.aws.amazon.com/cloudformation/home#/stacks/quickcreate?templateURL=https://cf-stacks-giantswarm.s3.eu-west-1.amazonaws.com/sqs.yaml
+
+https://eu-west-1.console.aws.amazon.com/cloudformation/home#/stacks/update?stackId=arn:aws:cloudformation:eu-west-1:107744613923:stack/t8y8a-termination-handler/b763fe30-ce07-11ed-a082-0a6c5c4ae2df&templateURL=https://cf-stacks-giantswarm.s3.eu-west-1.amazonaws.com/sqs.yaml
+
 # AWS Role
 
 ### IAM Policy
