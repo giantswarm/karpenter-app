@@ -12,24 +12,31 @@ Resources:
     Type: "AWS::IAM::Role"
     Properties:
       RoleName: !Sub "${ClusterName}-Karpenter-Role"
-      Path: /
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Federated: "arn:aws:iam::${AWS::AccountId}:oidc-provider/${IrsaDomain}"
-            Condition:
-              StringEquals:
-                "${IrsaDomain}:sub": "system:serviceaccount:kube-system:karpenter"
-            Action:
-              - "sts:AssumeRoleWithWebIdentity"
-      ManagedPolicyArns:
-        - !GetAtt KarpenterControllerPolicy.Arn
+      AssumeRolePolicyDocument: !Sub
+        |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Federated": "arn:aws:iam::${AWS::AccountId}:oidc-provider/${IrsaDomain}"
+                    },
+                    "Action": "sts:AssumeRoleWithWebIdentity",
+                    "Condition": {
+                        "StringEquals": {
+                            "${IrsaDomain}:sub": "system:serviceaccount:kube-system:karpenter"
+                        }
+                    }
+                }
+            ]
+          }
   KarpenterControllerPolicy:
-    Type: AWS::IAM::ManagedPolicy
+    Type: AWS::IAM::Policy
     Properties:
-      ManagedPolicyName: !Sub "KarpenterControllerPolicy-${ClusterName}"
+      Roles: 
+        - Ref: "KarpenterNodeRole"
+      PolicyName: !Sub "KarpenterControllerPolicy-${ClusterName}"
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
