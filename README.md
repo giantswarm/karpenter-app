@@ -191,6 +191,30 @@ spec:
       Name: <CLUSTER_ID>-karpenter-spot-worker
 ```
 
+# Modify Cluster Autoscaler Values
+
+Create a configmap on the Management Cluster:
+```
+apiVersion: v1
+data:
+  values: |
+    configmap:
+      expander: least-waste
+      scanInterval: 30s
+      scaleDownUnneededTime: 5m0s
+      scaleDownUtilizationThreshold: 0.5
+      skipNodesWithLocalStorage: "false"
+      skipNodesWithSystemPods: "true"
+      balanceSimilarNodeGroups: "true"
+      new-pod-scale-up-delay: 300
+kind: ConfigMap
+metadata:
+  name: cluster-autoscaler-user-values
+  namespace: <CLUSTER_ID>
+```
+
+Modify the cluster-autoscaler app to use this configmap as user-values.
+
 # Some important notes
 
 - Right now, Karpenter and cluster-autoscaler live together in the Workload Cluster and there is no customized configuration for cluster-autoscaler. This means that _usually_ new nodes will be created by Karpenter (it is "faster") but this is not guaranteed.
