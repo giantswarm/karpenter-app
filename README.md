@@ -206,7 +206,7 @@ data:
       skipNodesWithLocalStorage: "false"
       skipNodesWithSystemPods: "true"
       balanceSimilarNodeGroups: "true"
-      new-pod-scale-up-delay: 300
+      newPodScaleUpDelay: 300
 kind: ConfigMap
 metadata:
   name: cluster-autoscaler-user-values
