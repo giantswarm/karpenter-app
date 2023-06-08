@@ -11,4 +11,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release of Karpenter-app
 
-[Unreleased] https://github.com/giantswarm/karpenter-app/compare/v0.0.0...HEAD
+[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v0.0.0...HEAD
