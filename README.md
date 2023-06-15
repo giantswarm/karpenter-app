@@ -130,7 +130,7 @@ kind: Provisioner
 metadata:
   name: spot-provisioner
 spec:
-  # # Enable consolidation for cost savings
+  # Enable consolidation for cost savings
   consolidation:
     enabled: true
 
