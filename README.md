@@ -130,12 +130,13 @@ kind: Provisioner
 metadata:
   name: spot-provisioner
 spec:
+  # Enable consolidation for cost savings
+  consolidation:
+    enabled: true
+
   # # If omitted, the feature is disabled and nodes will never expire.  If set to less time than it requires for a node
   # # to become ready, the node may expire before any pods successfully start.
   ttlSecondsUntilExpired: 86400 # 1 Days = 60 * 60 * 24 Seconds;
-
-  # # If omitted, the feature is disabled, nodes will never scale down due to low utilization
-  ttlSecondsAfterEmpty: 30
 
   # # Provisioned nodes will have these taints
   # # Taints may prevent pods from scheduling if they are not tolerated by the pod.
