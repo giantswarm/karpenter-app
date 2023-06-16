@@ -16,3 +16,10 @@ sources:
   - https://github.com/aws/karpenter/
 annotations:
   application.giantswarm.io/team: phoenix
+dependencies:
+  - name: karpenter
+    version: v0.27.0
+    repository: oci://public.ecr.aws/karpenter
+maintainers:
+  - name: giantswarm/team-phoenix
+    email: team-phoenix@giantswarm.io
