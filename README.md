@@ -156,6 +156,8 @@ spec:
     managed-by: karpenter
     nodepool: <NODEPOOL_ID>
     cluster: <CLUSTER_ID>
+    node.kubernetes.io/worker: ""
+    role: worker
 
   # Requirements that constrain the parameters of provisioned nodes.
   # These requirements are combined with pod.spec.affinity.nodeAffinity rules.
