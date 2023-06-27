@@ -18,7 +18,7 @@ annotations:
   application.giantswarm.io/team: phoenix
 dependencies:
   - name: karpenter
-    version: v0.27.0
+    version: v0.28.0
     repository: oci://public.ecr.aws/karpenter
 maintainers:
   - name: giantswarm/team-phoenix
