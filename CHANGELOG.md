@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Enable consolidation in the Provisioner
+- Add `giantswarm.io/cluster` AWS tag for unified overview in AWS cost explorer
 
 ## [0.1.0] - 2023-06-08
 
