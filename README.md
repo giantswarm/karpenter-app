@@ -199,6 +199,7 @@ spec:
       managed-by: karpenter
       nodepool: <NODEPOOL_ID>
       cluster: <CLUSTER_ID>
+      giantswarm.io/cluster: <CLUSTER_ID>
       Name: <CLUSTER_ID>-karpenter-spot-worker
 ```
 
