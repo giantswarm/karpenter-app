@@ -20,6 +20,9 @@ dependencies:
   - name: karpenter
     version: v0.28.0
     repository: oci://public.ecr.aws/karpenter
+  - name: karpenter-crd
+    version: v0.28.0
+    repository: oci://public.ecr.aws/karpenter-crd
 maintainers:
   - name: giantswarm/team-phoenix
     email: team-phoenix@giantswarm.io
