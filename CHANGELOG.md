@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.0] - 2023-06-29
 
+### Changed
+
+- Completely moved to Helm chart dependency
+- Reverted Karpenter to 0.27
+
 ## [0.2.0] - 2023-06-27
 
 ### Added
