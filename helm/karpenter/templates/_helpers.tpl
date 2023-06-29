@@ -61,11 +61,21 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Create the name of the service account to use
 */}}
+
 {{- define "karpenter.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "karpenter.fullname" .) .Values.serviceAccount.name }}
+{{- $create := false }}
+{{- $saname := "" }}
+{{- if .Values.karpenter }}
+{{- $create := .Values.karpenter.serviceAccount.create }}
+{{- $saname := .Values.karpenter.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- $create := .Values.serviceAccount.create }}
+{{- $saname := .Values.serviceAccount.name }}
+{{- end }}
+{{- if $create }}
+{{- default (include "karpenter.fullname" .) $saname }}
+{{- else }}
+{{- default "karpenter" $saname }}
 {{- end }}
 {{- end }}
 
