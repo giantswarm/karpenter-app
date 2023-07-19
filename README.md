@@ -187,8 +187,8 @@ spec:
   # Limits prevent Karpenter from creating new instances once the limit is exceeded.
   limits:
     resources:
-      cpu: "1000"
-      memory: 1000Gi
+      cpu: "2000"
+      memory: 2000Gi
 
   # These fields vary per cloud provider, see your cloud provider specific documentation
   provider:
