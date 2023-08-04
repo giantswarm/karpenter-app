@@ -3,7 +3,7 @@ name: karpenter
 description: A Helm chart for Karpenter, an open-source node provisioning project built for Kubernetes.
 type: application
 version: [[ .Version ]]
-appVersion: 0.28.0
+appVersion: 0.29.0
 keywords:
   - cluster
   - node
