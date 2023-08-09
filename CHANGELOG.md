@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `app.kubernetes.io/instance` and `app.kubernetes.io/name` labels
+
+### Changed
+
+- Create ServiceMonitor by default
+
 ## [0.4.0] - 2023-08-04
 
 ### Changed
