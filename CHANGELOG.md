@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `app.kubernetes.io/instance` and `app.kubernetes.io/name` labels
+
 ### Changed
 
 - Upgrade to Karpenter 0.29.2
+- Create ServiceMonitor by default
 
 ## [0.4.0] - 2023-08-04
 
