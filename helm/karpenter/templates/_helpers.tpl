@@ -31,14 +31,20 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Selector labels
+*/}}
+{{- define "karpenter.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "karpenter.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "karpenter.labels" -}}
 helm.sh/chart: {{ include "karpenter.chart" . }}
-application.giantswarm.io/team: {{ index .Chart.Annotations "application.giantswarm.io/team" | quote }}
+application.giantswarm.io/team: {{ index .Chart.Annotations "application.giantswarm.io/team" | default "phoenix" | quote }}
 giantswarm.io/managed-by: {{ .Release.Name | quote }}
-giantswarm.io/cluster: {{ .Values.clusterID | quote }}
-giantswarm.io/organization: {{ .Values.organization | quote }}
 giantswarm.io/service-type: managed
 {{ include "karpenter.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
@@ -50,14 +56,6 @@ app.kubernetes.io/name: {{ include "karpenter.name" . }}
 {{- with .Values.additionalLabels }}
 {{ toYaml . }}
 {{- end }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "karpenter.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "karpenter.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
