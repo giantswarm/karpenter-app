@@ -45,9 +45,6 @@ karpenter:
   podDisruptionBudget:
     name: karpenter
     maxUnavailable: 1
-  # -- SecurityContext for the pod.
-  podSecurityContext:
-    fsGroup: 1000
   # -- PriorityClass name for the pod.
   priorityClassName: system-cluster-critical
   # -- Override the default termination grace period for the pod.
@@ -107,9 +104,9 @@ karpenter:
       # -- Repository path to the controller image.
       repository: public.ecr.aws/karpenter/controller
       # -- Tag of the controller image.
-      tag: v0.29.2
+      tag: v0.31.0
       # -- SHA256 digest of the controller image.
-      digest: sha256:bac5ea470c09df21eb3742cf9448e9b806138ed5b6321d4e04697bbdf122eac6
+      digest: sha256:d29767fa9c5c0511a3812397c932f5735234f03a7a875575422b712d15e54a77
     # -- SecurityContext for the controller container.
     securityContext: {}
     # -- Additional environment variables for the controller pod.
