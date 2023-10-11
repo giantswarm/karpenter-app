@@ -371,6 +371,17 @@
         },
         "clusterID": {
             "type": "string"
+        },
+        "renewerCronjob": {
+            "type": "object",
+            "properties": {
+                "percentage": {
+                    "type": "integer"
+                },
+                "schedule": {
+                    "type": "string"
+                }
+            }
         }
     }
 }

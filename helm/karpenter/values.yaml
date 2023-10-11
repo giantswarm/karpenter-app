@@ -205,6 +205,10 @@ karpenter:
       # and the desired state of nodes set in provisioners and node templates
       driftEnabled: false
 
+renewerCronjob:
+  schedule: "*/10 * * * *"
+  percentage: 20
+
 # Fields managed by cluster-user-values
 clusterID: ""
 baseDomain: ""
