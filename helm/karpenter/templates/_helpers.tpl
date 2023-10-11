@@ -94,7 +94,7 @@ Karpenter image to use
 Karpenter renewer image to use
 */}}
 {{- define "karpenter.renewer.image" -}}
-{{- printf "%s:%s" .Values.renewerCronjob.image.repository  .Values.controller.image.tag }}
+{{- printf "%s:%s" .Values.renewerCronjob.image.repository  .Values.renewerCronjob.image.tag }}
 {{- end }}
 
 {{/* Get PodDisruptionBudget API Version */}}
