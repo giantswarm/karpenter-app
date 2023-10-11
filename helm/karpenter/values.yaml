@@ -208,6 +208,9 @@ karpenter:
 renewerCronjob:
   schedule: "*/10 * * * *"
   percentage: 20
+  image:
+    repository: giantswarm/docker-kubectl
+    tag: 1.28.2
 
 # Fields managed by cluster-user-values
 clusterID: ""

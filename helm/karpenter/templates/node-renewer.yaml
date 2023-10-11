@@ -70,7 +70,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: renewer
-            image: giantswarm/docker-kubectl:1.28.2
+            image: {{ include "karpenter.renewer.image" . }}
             command:
             - /bin/sh
             - -c
