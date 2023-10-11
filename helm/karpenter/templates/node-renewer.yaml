@@ -90,6 +90,9 @@ spec:
 
               echo "Target version identified as: $TARGET_VERSION"
 
+              TOTAL_KARPENTER_NODES=$(kubectl get nodes -l 'managed-by=karpenter' -o=jsonpath='{.items[*].metadata.name}' | wc -w)
+              echo "$TOTAL_KARPENTER_NODES total nodes managed by Karpenter."
+
               # Get the list of nodes with the "managed-by: karpenter" label and a different version
               echo "Fetching nodes with the 'managed-by: karpenter' label and a different version..."
               NODES_TO_DELETE=$(kubectl get nodes -l 'managed-by in (karpenter)' -o=jsonpath='{range .items[?(@.metadata.labels.aws-operator\.giantswarm\.io/version!="'$TARGET_VERSION'")]}{.metadata.name}{"\n"}{end}')
@@ -106,11 +109,11 @@ spec:
               echo "$TOTAL_NODES nodes identified with a different version."
               echo $NODES_TO_DELETE
 
-              # Calculate 20% of the nodes
-              NUM_NODES_TO_DELETE=$((TOTAL_NODES * {{ .Values.renewerCronjob.percentage }} / 100))
+              # Calculate % of the nodes to delete
+              NUM_NODES_TO_DELETE=$((TOTAL_KARPENTER_NODES * {{ .Values.renewerCronjob.percentage }} / 100))
 
               # If there are nodes to delete but the calculated number is 0, delete at least one node
-              if [ "$NUM_NODES_TO_DELETE" -eq 0 ] && [ "$TOTAL_NODES" -gt 0 ]; then
+              if [ "$NUM_NODES_TO_DELETE" -eq 0 ] && [ "$TOTAL_KARPENTER_NODES" -gt 0 ]; then
                   NUM_NODES_TO_DELETE=1
               fi
 
