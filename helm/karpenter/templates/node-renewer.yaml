@@ -34,15 +34,37 @@ subjects:
   name: {{ include "karpenter.serviceAccountName" . }}-renewer
   namespace: {{ .Release.Namespace }}
 ---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  labels:
+    {{- include "karpenter.labels" . | nindent 4 }}
+  name: {{ include "karpenter.serviceAccountName" . }}-renewer
+  namespace: {{ .Release.Namespace }}
+spec:
+  egress:
+  - toEntities:
+    - kube-apiserver
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: karpenter-renewer
+      app.kubernetes.io/name: karpenter
+---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: {{ include "karpenter.serviceAccountName" . }}-renewer
+  labels:
+    {{- include "karpenter.labels" . | nindent 4 }}
 spec:
   schedule: "{{ .Values.renewerCronjob.schedule }}"
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app.kubernetes.io/instance: karpenter-renewer
+            {{- include "karpenter.labels" . | nindent 12 }}
         spec:
           serviceAccountName: {{ include "karpenter.serviceAccountName" . }}-renewer
           restartPolicy: OnFailure
