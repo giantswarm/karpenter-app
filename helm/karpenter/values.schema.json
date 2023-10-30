@@ -16,6 +16,33 @@
         "clusterID": {
             "type": "string"
         },
+        "flowSchema": {
+            "type": "object",
+            "properties": {
+                "leaderElection": {
+                    "type": "object",
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "matchingPrecedence": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "workload": {
+                    "type": "object",
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "matchingPrecedence": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
         "karpenter": {
             "type": "object",
             "properties": {
@@ -31,38 +58,6 @@
                 "affinity": {
                     "type": "object",
                     "properties": {
-                        "nodeAffinity": {
-                            "type": "object",
-                            "properties": {
-                                "requiredDuringSchedulingIgnoredDuringExecution": {
-                                    "type": "object",
-                                    "properties": {
-                                        "nodeSelectorTerms": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "matchExpressions": {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "key": {
-                                                                    "type": "string"
-                                                                },
-                                                                "operator": {
-                                                                    "type": "string"
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
                         "podAntiAffinity": {
                             "type": "object",
                             "properties": {

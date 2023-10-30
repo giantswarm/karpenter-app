@@ -21,19 +21,6 @@ karpenter:
     name: ""
     # -- Additional annotations for the ServiceAccount.
     annotations: {}
-  flowSchema:
-    # -- Specifies the flowSchema configuration for leader-election calls.
-    leaderElection:
-      # -- Specifies if a the leaderElection flowSchema should be created.
-      create: true
-      # -- Specifies the precedence of the leaderElection flowSchema.
-      matchingPrecedence: 300
-    # -- Specifies the flowSchema configuration for all other calls.
-    workload:
-      # -- Specifies if a the workload flowSchema should be created.
-      create: true
-      # -- Specifies the precedence of the workload flowSchema.
-      matchingPrecedence: 1000
   # -- Specifies additional rules for the core ClusterRole.
   additionalClusterRoleRules: []
   serviceMonitor:
@@ -217,6 +204,20 @@ karpenter:
       # Setting driftEnabled to true enables the drift deprovisioner to watch for drift between currently deployed nodes
       # and the desired state of nodes set in provisioners and node templates
       driftEnabled: false
+
+flowSchema:
+  # -- Specifies the flowSchema configuration for leader-election calls.
+  leaderElection:
+    # -- Specifies if a the leaderElection flowSchema should be created.
+    create: true
+    # -- Specifies the precedence of the leaderElection flowSchema.
+    matchingPrecedence: 300
+  # -- Specifies the flowSchema configuration for all other calls.
+  workload:
+    # -- Specifies if a the workload flowSchema should be created.
+    create: true
+    # -- Specifies the precedence of the workload flowSchema.
+    matchingPrecedence: 1000
 
 renewerCronjob:
   schedule: "*/10 * * * *"
