@@ -14,11 +14,13 @@ spec:
       ruleNames:
         - run-as-non-root
         - autogen-run-as-non-root
+        - cronjob-run-as-non-root
         - autogen-cronjob-run-as-non-root
     - policyName: disallow-privilege-escalation
       ruleNames:
         - privilege-escalation
         - autogen-privilege-escalation
+        - cronjob-privilege-escalation
         - autogen-cronjob-privilege-escalation
     - policyName: disallow-host-path
       ruleNames:
@@ -34,11 +36,13 @@ spec:
         - adding-capabilities-strict
         - autogen-require-drop-all
         - autogen-adding-capabilities-strict
+        - cronjob-require-drop-all
         - autogen-cronjob-require-drop-all
     - policyName: restrict-seccomp-strict
       ruleNames:
         - check-seccomp-strict
         - autogen-check-seccomp-strict
+        - cronjob-check-seccomp-strict
         - autogen-cronjob-check-seccomp-strict
     - policyName: restrict-volume-types
       ruleNames:
