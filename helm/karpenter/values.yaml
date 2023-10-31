@@ -231,3 +231,6 @@ clusterID: ""
 baseDomain: ""
 aws:
   accountID: ""
+global:
+  podSecurityStandards:
+    enforced: false

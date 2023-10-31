@@ -1,0 +1,64 @@
+{{- if .Values.global.podSecurityStandards.enforced }}
+apiVersion: kyverno.io/v2alpha1
+kind: PolicyException
+metadata:
+  name: {{ include "karpenter.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+spec:
+  exceptions:
+    - policyName: require-run-as-nonroot
+      ruleNames:
+        - run-as-non-root
+        - autogen-run-as-non-root
+        - cronjob-run-as-non-root
+        - autogen-cronjob-run-as-non-root
+    - policyName: disallow-privilege-escalation
+      ruleNames:
+        - privilege-escalation
+        - autogen-privilege-escalation
+        - cronjob-privilege-escalation
+        - autogen-cronjob-privilege-escalation
+    - policyName: disallow-host-path
+      ruleNames:
+        - host-path
+        - autogen-host-path
+    - policyName: disallow-privileged-containers
+      ruleNames:
+        - privileged-containers
+        - autogen-privileged-containers
+    - policyName: disallow-capabilities-strict
+      ruleNames:
+        - require-drop-all
+        - adding-capabilities-strict
+        - autogen-require-drop-all
+        - autogen-adding-capabilities-strict
+        - cronjob-require-drop-all
+        - autogen-cronjob-require-drop-all
+    - policyName: restrict-seccomp-strict
+      ruleNames:
+        - check-seccomp-strict
+        - autogen-check-seccomp-strict
+        - cronjob-check-seccomp-strict
+        - autogen-cronjob-check-seccomp-strict
+    - policyName: restrict-volume-types
+      ruleNames:
+        - restricted-volumes
+        - autogen-restricted-volumes
+  match:
+    any:
+      - resources:
+          kinds:
+            - Deployment
+            - ReplicaSet
+            - Pod
+            - CronJob
+            - Job
+          namespaces:
+            - {{ .Release.Namespace }}
+          names:
+            - karpenter*
+{{- end }}
