@@ -55,7 +55,7 @@ spec:
             - Deployment
             - ReplicaSet
             - Pod
-            - Cronjob
+            - CronJob
             - Job
           namespaces:
             - {{ .Release.Namespace }}
