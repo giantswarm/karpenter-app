@@ -50,7 +50,7 @@ spec:
       app.kubernetes.io/instance: karpenter-renewer
       app.kubernetes.io/name: karpenter
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ include "karpenter.serviceAccountName" . }}-renewer
