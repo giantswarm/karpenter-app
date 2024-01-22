@@ -224,7 +224,7 @@ renewerCronjob:
   percentage: 20
   image:
     repository: giantswarm/docker-kubectl
-    tag: 1.28.2
+    tag: 1.29.1
 
 # Fields managed by cluster-user-values
 clusterID: ""
