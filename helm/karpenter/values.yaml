@@ -118,7 +118,7 @@ karpenter:
   controller:
     image:
       # -- Repository path to the controller image.
-      repository: public.ecr.aws/karpenter/controller
+      repository: gsoci.azurecr.io/giantswarm/karpenter
       # -- Tag of the controller image.
       tag: v0.29.2
       # -- SHA256 digest of the controller image.
@@ -236,7 +236,7 @@ renewerCronjob:
   schedule: "*/10 * * * *"
   percentage: 20
   image:
-    repository: giantswarm/docker-kubectl
+    repository: gsoci.azurecr.io/giantswarm/docker-kubectl
     tag: 1.28.2
 
 # Fields managed by cluster-user-values
