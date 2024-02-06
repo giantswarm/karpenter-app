@@ -157,9 +157,9 @@ Flatten the stderr logging outputs from args provided
 
 
 {{- define "giantswarm.irsa.annotation" -}}
-{{- if (or (eq .Values.aws.region "cn-north-1") (eq .Values.aws.region "cn-northwest-1"))}}
-eks.amazonaws.com/role-arn: arn:aws-cn:iam::{{ .Values.aws.accountID }}:role/{{ .Values.clusterID }}-Karpenter-Role
+{{- if (or (eq .Values.region "cn-north-1") (eq .Values.region "cn-northwest-1"))}}
+eks.amazonaws.com/role-arn: arn:aws-cn:iam::{{ .Values.accountID }}:role/{{ .Values.clusterID }}-Karpenter-Role
 {{- else }}
-eks.amazonaws.com/role-arn: arn:aws:iam::{{ .Values.aws.accountID }}:role/{{ .Values.clusterID }}-Karpenter-Role
+eks.amazonaws.com/role-arn: arn:aws:iam::{{ .Values.accountID }}:role/{{ .Values.clusterID }}-Karpenter-Role
 {{- end -}}
 {{- end -}}
