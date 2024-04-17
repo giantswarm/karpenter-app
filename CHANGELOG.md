@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Remove node-renewer, in CAPA we will rely on TTL or manual roll of the nodes.
+
 ## [0.10.1] - 2024-02-06
 
 ### Changed
