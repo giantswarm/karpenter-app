@@ -122,6 +122,8 @@ We will create a provisioner that will reuse the Launch Template and Subnets of 
 
 Replace `<CLUSTER_ID>` and `<NODEPOOL_ID>` in the following template to create the first provisioner. 
 
+In CAPA, using TTL is the only way to renew nodes, we recomend a maximum of 3 days of TTL for the provisioner in order to make sure nodes are not stale for too long even after upgrades.
+
 Apply this resource on the Workload Cluster after having installed Karpenter:
 
 ```
