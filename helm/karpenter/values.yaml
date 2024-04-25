@@ -237,7 +237,7 @@ renewerCronjob:
   percentage: 20
   image:
     repository: gsoci.azurecr.io/giantswarm/docker-kubectl
-    tag: 1.29.3
+    tag: 1.30.0
 
 # Fields managed by cluster-user-values
 clusterID: ""
