@@ -120,9 +120,9 @@ karpenter:
       # -- Repository path to the controller image.
       repository: gsoci.azurecr.io/giantswarm/karpenter-controller
       # -- Tag of the controller image.
-      tag: v0.34.5
+      tag: 0.36.1
       # -- SHA256 digest of the controller image.
-      digest: sha256:44cfd8883ff13a44987d8dc28394058e9afa71e3f6d11f55f24e11f64093dea7
+      digest: sha256:5b245674ae0ac97558cd335ebae19c0c80e911daac2352cb74ee0ccdba7f5e2b
     # -- SecurityContext for the controller container.
     securityContext: {}
     # -- Additional environment variables for the controller pod.
