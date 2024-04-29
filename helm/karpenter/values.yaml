@@ -238,6 +238,10 @@ flowSchema:
     # -- Specifies the precedence of the workload flowSchema.
     matchingPrecedence: 1000
 
+defaultProvisioner:
+  enabled: false
+  nodePoolName: karpenter
+
 # Fields managed by cluster-user-values
 clusterID: ""
 baseDomain: ""

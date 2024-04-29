@@ -16,6 +16,17 @@
         "clusterID": {
             "type": "string"
         },
+        "defaultProvisioner": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "nodePoolName": {
+                    "type": "string"
+                }
+            }
+        },
         "flowSchema": {
             "type": "object",
             "properties": {
@@ -38,6 +49,19 @@
                         },
                         "matchingPrecedence": {
                             "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
+        "global": {
+            "type": "object",
+            "properties": {
+                "podSecurityStandards": {
+                    "type": "object",
+                    "properties": {
+                        "enforced": {
+                            "type": "boolean"
                         }
                     }
                 }
@@ -161,6 +185,33 @@
                 },
                 "extraVolumes": {
                     "type": "array"
+                },
+                "flowSchema": {
+                    "type": "object",
+                    "properties": {
+                        "leaderElection": {
+                            "type": "object",
+                            "properties": {
+                                "create": {
+                                    "type": "boolean"
+                                },
+                                "matchingPrecedence": {
+                                    "type": "integer"
+                                }
+                            }
+                        },
+                        "workload": {
+                            "type": "object",
+                            "properties": {
+                                "create": {
+                                    "type": "boolean"
+                                },
+                                "matchingPrecedence": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
                 },
                 "fullnameOverride": {
                     "type": "string"
@@ -357,24 +408,14 @@
                 "webhook": {
                     "type": "object",
                     "properties": {
+                        "enable": {
+                            "type": "boolean"
+                        },
                         "logLevel": {
                             "type": "string"
                         },
                         "port": {
                             "type": "integer"
-                        }
-                    }
-                }
-            }
-        },
-        "global": {
-            "type": "object",
-            "properties": {
-                "podSecurityStandards": {
-                    "type": "object",
-                    "properties": {
-                        "enforced": {
-                            "type": "boolean"
                         }
                     }
                 }
