@@ -184,39 +184,37 @@ karpenter:
     # -- The maximum amount of time with no new ending pods that if exceeded ends the current batching window. If pods arrive
     # faster than this time, the batching window will be extended up to the maxDuration. If they arrive slower, the pods
     # will be batched separately.
-    batchIdleDuration: 1s
-    # -- AWS-specific configuration values
-    aws:
-      # -- Cluster name.
-      clusterName: "CLUSTER_NAME"
-      # -- Cluster endpoint. If not set, will be discovered during startup (EKS only)
-      clusterEndpoint: "https://kubernetes.default.svc"
-      # -- The default instance profile to use when launching nodes
-      defaultInstanceProfile: ""
-      # -- If true then instances that support pod ENI will report a vpc.amazonaws.com/pod-eni resource
-      enablePodENI: false
-      # -- Indicates whether new nodes should use ENI-based pod density
-      # DEPRECATED: Use `.spec.kubeletConfiguration.maxPods` to set pod density on a per-provisioner basis
-      enableENILimitedPodDensity: true
-      # -- If true then assume we can't reach AWS services which don't have a VPC endpoint
-      # This also has the effect of disabling look-ups to the AWS pricing endpoint
-      isolatedVPC: false
-      # -- The node naming convention (either "ip-name" or "resource-name")
-      nodeNameConvention: "ip-name"
-      # -- The VM memory overhead as a percent that will be subtracted from the total memory for all instance types
-      vmMemoryOverheadPercent: 0.075
-      # -- interruptionQueueName is disabled if not specified. Enabling interruption handling may
-      # require additional permissions on the controller service account. Additional permissions are outlined in the docs.
-      interruptionQueueName: ""
-      # -- The global tags to use on all AWS infrastructure resources (launch templates, instances, etc.) across node templates
-      tags:
-    # -- Feature Gate configuration values. Feature Gates will follow the same graduation process and requirements as feature gates
-    # in Kubernetes. More information here https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/#feature-gates-for-alpha-or-beta-features
-    featureGates:
-      # -- driftEnabled is in ALPHA and is disabled by default.
-      # Setting driftEnabled to true enables the drift deprovisioner to watch for drift between currently deployed nodes
-      # and the desired state of nodes set in provisioners and node templates
-      driftEnabled: false
+    batchIdleDuration: 1s    
+    # -- Cluster name.
+    clusterName: "CLUSTER_NAME"
+    # -- Cluster endpoint. If not set, will be discovered during startup (EKS only)
+    clusterEndpoint: "https://kubernetes.default.svc"
+    # -- The default instance profile to use when launching nodes
+    defaultInstanceProfile: ""
+    # -- If true then instances that support pod ENI will report a vpc.amazonaws.com/pod-eni resource
+    enablePodENI: false
+    # -- Indicates whether new nodes should use ENI-based pod density
+    # DEPRECATED: Use `.spec.kubeletConfiguration.maxPods` to set pod density on a per-provisioner basis
+    enableENILimitedPodDensity: true
+    # -- If true then assume we can't reach AWS services which don't have a VPC endpoint
+    # This also has the effect of disabling look-ups to the AWS pricing endpoint
+    isolatedVPC: false
+    # -- The node naming convention (either "ip-name" or "resource-name")
+    nodeNameConvention: "ip-name"
+    # -- The VM memory overhead as a percent that will be subtracted from the total memory for all instance types
+    vmMemoryOverheadPercent: 0.075
+    # -- interruptionQueueName is disabled if not specified. Enabling interruption handling may
+    # require additional permissions on the controller service account. Additional permissions are outlined in the docs.
+    interruptionQueueName: ""
+    # -- The global tags to use on all AWS infrastructure resources (launch templates, instances, etc.) across node templates
+    tags:
+  # -- Feature Gate configuration values. Feature Gates will follow the same graduation process and requirements as feature gates
+  # in Kubernetes. More information here https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/#feature-gates-for-alpha-or-beta-features
+  featureGates:
+    # -- driftEnabled is in ALPHA and is disabled by default.
+    # Setting driftEnabled to true enables the drift deprovisioner to watch for drift between currently deployed nodes
+    # and the desired state of nodes set in provisioners and node templates
+    driftEnabled: false
 
 flowSchema:
   # -- Specifies the flowSchema configuration for leader-election calls.
