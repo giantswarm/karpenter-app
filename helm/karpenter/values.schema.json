@@ -379,28 +379,6 @@
                     }
                 }
             }
-        },
-        "renewerCronjob": {
-            "type": "object",
-            "properties": {
-                "image": {
-                    "type": "object",
-                    "properties": {
-                        "repository": {
-                            "type": "string"
-                        },
-                        "tag": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "percentage": {
-                    "type": "integer"
-                },
-                "schedule": {
-                    "type": "string"
-                }
-            }
         }
     }
 }

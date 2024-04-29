@@ -92,6 +92,11 @@ karpenter:
   tolerations:
     - key: CriticalAddonsOnly
       operator: Exists
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
+    - effect: NoSchedule
+      key: "node.cluster.x-k8s.io/uninitialized"
+      operator: "Exists"
   # -- Additional volumes for the pod.
   extraVolumes: []
   # - name: aws-iam-token
@@ -231,13 +236,6 @@ flowSchema:
     create: true
     # -- Specifies the precedence of the workload flowSchema.
     matchingPrecedence: 1000
-
-renewerCronjob:
-  schedule: "*/10 * * * *"
-  percentage: 20
-  image:
-    repository: gsoci.azurecr.io/giantswarm/docker-kubectl
-    tag: 1.29.3
 
 # Fields managed by cluster-user-values
 clusterID: ""
