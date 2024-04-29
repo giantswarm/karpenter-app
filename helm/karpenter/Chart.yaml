@@ -11,7 +11,7 @@ keywords:
   - autoscaling
   - lifecycle
 home: https://karpenter.sh/
-icon: https://repository-images.githubusercontent.com/278480393/dab059c8-caa1-4b55-aaa7-3d30e47a5616
+icon: https://s.giantswarm.io/app-icons/karpenter/1/light.svg
 sources:
   - https://github.com/aws/karpenter/
 annotations:
