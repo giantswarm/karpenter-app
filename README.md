@@ -82,11 +82,12 @@ spec:
       cpu: "4000"
       memory: 4000Gi
 
-  # These fields vary per cloud provider, see your cloud provider specific documentation
+  # CAPA provider example
   provider:
     subnetSelector:
-      kubernetes.io/cluster/paukarp	: owned
+      giantswarm.io/cluster: <CLUSTER_ID>
       sigs.k8s.io/cluster-api-provider-aws/role: private
+    # For EKS the launchtemplate dos not follow this convention and need to be gathered from the AWS Console.
     launchTemplate: <CLUSTER_ID>-<NODEPOOL_ID>
     tags:
       managed-by: karpenter
