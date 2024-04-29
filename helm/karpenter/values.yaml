@@ -184,7 +184,7 @@ karpenter:
     # -- The maximum amount of time with no new ending pods that if exceeded ends the current batching window. If pods arrive
     # faster than this time, the batching window will be extended up to the maxDuration. If they arrive slower, the pods
     # will be batched separately.
-    batchIdleDuration: 1s    
+    batchIdleDuration: 1s
     # -- Cluster name.
     clusterName: "CLUSTER_NAME"
     # -- Cluster endpoint. If not set, will be discovered during startup (EKS only)
