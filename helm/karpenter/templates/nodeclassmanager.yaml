@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "karpenter.serviceAccountName" . }}-nodeclassmanager
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter.labels" . | nindent 4 }}
+  annotations:
+  {{- if or .Values.karpenter.additionalAnnotations }}
+  {{- with .Values.karpenter.additionalAnnotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "karpenter.serviceAccountName" . }}-nodeclassmanager
+rules:
+- apiGroups: ["karpenter.k8s.aws"]
+  resources: ["ec2nodeclass"]
+  verbs: ["get", "list", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "karpenter.serviceAccountName" . }}-nodeclassmanager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "karpenter.serviceAccountName" . }}-nodeclassmanager
+subjects:
+- kind: ServiceAccount
+  name: {{ include "karpenter.serviceAccountName" . }}-nodeclassmanager
+  namespace: {{ .Release.Namespace }}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  labels:
+    {{- include "karpenter.labels" . | nindent 4 }}
+  name: {{ include "karpenter.serviceAccountName" . }}-nodeclassmanager
+  namespace: {{ .Release.Namespace }}
+spec:
+  egress:
+  - toEntities:
+    - kube-apiserver
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: karpenter-nodeclassmanager
+      app.kubernetes.io/name: karpenter
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "karpenter.serviceAccountName" . }}-nodeclassmanager
+  labels:
+    {{- include "karpenter.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.renewerCronjob.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/instance: karpenter-renewer
+            {{- include "karpenter.labels" . | nindent 12 }}
+        spec:
+          serviceAccountName: {{ include "karpenter.serviceAccountName" . }}-renewer
+          restartPolicy: OnFailure
+          containers:
+          - name: renewer
+            image: {{ include "karpenter.renewer.image" . }}
+            command:
+            - /bin/sh
+            - -c
+            - |
+              #!/bin/bash
+
+              # Get autoscaling group names with the specified cluster ID tag
+              autoscaling_groups=$(aws autoscaling describe-auto-scaling-groups --query "AutoScalingGroups[?Tags[?Key=='kubernetes.io/cluster/$CLUSTER_ID']].{AutoScalingGroupName: AutoScalingGroupName, NodeGroupName: Tags[?Key=='eks:nodegroup-name'].Value | [0]}" --output json)
+
+              # Iterate over each autoscaling group
+              for row in $(echo "${autoscaling_groups}" | jq -r '.[] | @base64'); do
+                  _jq() {
+                      echo "${row}" | base64 --decode | jq -r "$@"
+                  }
+
+                  asg_name=$(_jq '.AutoScalingGroupName')
+                  nodenode_group_name=$(_jq '.NodeGroupName' | cut -d '_' -f 2-)
+
+                  # Get default launch template version for the autoscaling group
+                  launch_template_version=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-name "$asg_name" --query "AutoScalingGroups[].MixedInstancesPolicy.LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateId" --output text)
+
+                  # Get user data from the default launch template version
+                  user_data=$(aws ec2 describe-launch-template-versions --launch-template-id "$launch_template_version" --versions \$Latest --query "LaunchTemplateVersions[].LaunchTemplateData.UserData" --output text)
+                  user_data_decoded=$(echo "$user_data" | base64 -d)
+
+                  ami_id=$(aws ec2 describe-launch-template-versions --launch-template-id "$launch_template_version" --versions \$Latest --query "LaunchTemplateVersions[].LaunchTemplateData.ImageId" --output text)
+
+                  # Print autoscaling group name and user data
+                  echo "Autoscaling Group: $asg_name"
+                  echo "Node Group: $nodenode_group_name"
+                  echo "AMI ID: $ami_id"
+                  echo "User Data:"
+                  echo "$user_data_decoded"
+
+
+                  if kubectl get EC2NodeClass "$node_group_name" -n <namespace> &> /dev/null; then
+                      kubectl patch EC2NodeClass "$node_group_name" -n <namespace> --type='json' -p='[{"op": "replace", "path": "/spec/amiSelectorTerms", "value": "'"- id: $ami_id"'"}]'
+                      echo "AMI ID patched in EC2NodeClass $node_group_name"
+
+                      kubectl patch EC2NodeClass "$node_group_name" -n <namespace> --type='json' -p='[{"op": "replace", "path": "/spec/userData", "value": "'"$user_data"'"}]'
+                      echo "User Data patched in EC2NodeClass $node_group_name"
+                  else
+                      echo "EC2NodeClass $node_group_name not found"
+                  fi
+              done

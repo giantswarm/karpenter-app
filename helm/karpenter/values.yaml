@@ -231,7 +231,7 @@ flowSchema:
     matchingPrecedence: 1000
 
 renewerCronjob:
-  schedule: "*/10 * * * *"
+  schedule: "*/5 * * * *"
   percentage: 20
   image:
     repository: gsoci.azurecr.io/giantswarm/docker-kubectl

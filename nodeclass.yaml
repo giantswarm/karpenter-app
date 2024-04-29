@@ -1,0 +1,90 @@
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: crossplane-def00-208e7
+spec:
+  template:
+    metadata:
+      labels:
+        managed-by: karpenter
+    spec:
+      nodeClassRef:
+        apiVersion: karpenter.k8s.aws/v1beta1
+        kind: EC2NodeClass
+        name: crossplane-def00-208e7
+      
+      startupTaints:
+        - key: node.cilium.io/agent-not-ready
+          value: "true"
+          effect: NoExecute
+        - key: node.cluster.x-k8s.io/uninitialized
+          value: "true"
+          effect: NoExecute
+
+      requirements:
+        - key: "karpenter.k8s.aws/instance-hypervisor"
+          operator: In
+          values: ["nitro"]
+        - key: "kubernetes.io/arch"
+          operator: In
+          values: ["amd64"]
+        - key: "karpenter.sh/capacity-type"
+          operator: In
+          values: ["spot", "on-demand"]
+
+  # Disruption section which describes the ways in which Karpenter can disrupt and replace Nodes
+  # Configuration in this section constrains how aggressive Karpenter can be with performing operations
+  # like rolling Nodes due to them hitting their maximum lifetime (expiry) or scaling down nodes to reduce cluster cost
+  disruption:
+    # Describes which types of Nodes Karpenter should consider for consolidation
+    # If using 'WhenUnderutilized', Karpenter will consider all nodes for consolidation and attempt to remove or replace Nodes when it discovers that the Node is underutilized and could be changed to reduce cost
+    # If using `WhenEmpty`, Karpenter will only consider nodes for consolidation that contain no workload pods
+    consolidationPolicy: WhenUnderutilized
+
+    # The amount of time a Node can live on the cluster before being removed
+    # Avoiding long-running Nodes helps to reduce security vulnerabilities as well as to reduce the chance of issues that can plague Nodes with long uptimes such as file fragmentation or memory leaks from system processes
+    # You can choose to disable expiration entirely by setting the string value 'Never' here
+    expireAfter: 72h
+
+---
+apiVersion: karpenter.k8s.aws/v1beta1
+kind: EC2NodeClass
+metadata:
+  name: crossplane-def00-208e7
+spec:
+  # Required, resolves a default ami and userdata
+  amiFamily: Custom
+
+  # Required, discovers subnets to attach to instances
+  # Each term in the array of subnetSelectorTerms is ORed together
+  # Within a single term, all conditions are ANDed
+  subnetSelectorTerms:
+    # Select on any subnet that has the "karpenter.sh/discovery: ${CLUSTER_NAME}"
+    # AND the "environment: test" tag OR any subnet with ID "subnet-09fa4a0a8f233a921"
+    - tags:
+        giantswarm.io/cluster: "crossplane"
+        sigs.k8s.io/cluster-api-provider-aws/association: "primary"
+
+  # Required, discovers security groups to attach to instances
+  # Each term in the array of securityGroupSelectorTerms is ORed together
+  # Within a single term, all conditions are ANDed
+  securityGroupSelectorTerms:
+    # Select on any security group that has both the "karpenter.sh/discovery: ${CLUSTER_NAME}" tag
+    # AND the "environment: test" tag OR any security group with the "my-security-group" name
+    # OR any security group with ID "sg-063d7acfb4b06c82c"
+    - tags:
+        kubernetes.io/cluster/crossplane: "owned"
+
+  amiSelectorTerms:
+    - id: ami-nonexistent
+
+  # Optional, IAM role to use for the node identity.
+  # The "role" field is immutable after EC2NodeClass creation. This may change in the
+  # future, but this restriction is currently in place today to ensure that Karpenter
+  # avoids leaking managed instance profiles in your account.
+  # Must specify one of "role" or "instanceProfile" for Karpenter to launch nodes
+  role: "nodes-crossplane-def00"
+
+  # Optional, propagates tags to underlying EC2 resources
+  tags:
+    karpenter: "owned"
