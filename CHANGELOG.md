@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Set interruption queue
+- Remove default values
+
 ## [0.12.0] - 2024-04-29
 
 ## [0.11.0] - 2024-04-17
