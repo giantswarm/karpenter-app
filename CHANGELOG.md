@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Detect and use latest `flowcontrol` API version.
 - Update PolicyExceptions to v2 and fallback to v2beta1.
 
 ## [0.12.1] - 2024-05-09

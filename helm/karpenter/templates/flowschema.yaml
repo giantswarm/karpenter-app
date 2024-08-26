@@ -1,6 +1,12 @@
 {{ if .Values.flowSchema.leaderElection.create }}
 ---
+{{- if .Capabilities.APIVersions.Has "flowcontrol.apiserver.k8s.io/v1"}}
+apiVersion: flowcontrol.apiserver.k8s.io/v1
+{{- else if .Capabilities.APIVersions.Has "flowcontrol.apiserver.k8s.io/v1beta3" }}
+apiVersion: flowcontrol.apiserver.k8s.io/v1beta3
+{{- else }}
 apiVersion: flowcontrol.apiserver.k8s.io/v1beta2
+{{- end }}
 kind: FlowSchema
 metadata:
   name: karpenter-leader-election
@@ -36,7 +42,13 @@ spec:
 {{- end -}}
 {{ if .Values.flowSchema.workload.create }}
 ---
+{{- if .Capabilities.APIVersions.Has "flowcontrol.apiserver.k8s.io/v1"}}
+apiVersion: flowcontrol.apiserver.k8s.io/v1
+{{- else if .Capabilities.APIVersions.Has "flowcontrol.apiserver.k8s.io/v1beta3" }}
+apiVersion: flowcontrol.apiserver.k8s.io/v1beta3
+{{- else }}
 apiVersion: flowcontrol.apiserver.k8s.io/v1beta2
+{{- end }}
 kind: FlowSchema
 metadata:
   name: karpenter-workload
