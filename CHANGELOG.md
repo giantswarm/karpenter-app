@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.4] - 2024-09-17
+
 ### Changed
 
 - Set the correct `app.kubernetes.io/instance` label to `karpenter-renewer`. This fixes the Karpenter `PodDisruptionBudget` pod selection.
@@ -91,7 +93,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release of Karpenter-app
 
-[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v0.9.3...HEAD
+[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v0.9.4...HEAD
+[0.9.4]: https://github.com/giantswarm/karpenter-app/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/giantswarm/karpenter-app/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/giantswarm/karpenter-app/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/giantswarm/karpenter-app/compare/v0.9.0...v0.9.1
