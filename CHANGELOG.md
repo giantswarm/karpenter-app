@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.0] - 2024-11-28
+
 ### Changed
 
 - Deploy the `ServiceMonitor` by default.
@@ -125,7 +127,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release of Karpenter-app
 
-[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/giantswarm/karpenter-app/compare/v0.13.0...v0.10.0
 [0.13.0]: https://github.com/giantswarm/karpenter-app/compare/v0.12.1...v0.13.0
 [0.12.1]: https://github.com/giantswarm/karpenter-app/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/giantswarm/karpenter-app/compare/v0.11.0...v0.12.0
