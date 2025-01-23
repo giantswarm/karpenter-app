@@ -1,3 +1,5 @@
+serviceType: managed
+
 karpenter:
   affinity:
     podAntiAffinity:
