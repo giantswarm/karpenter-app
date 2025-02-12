@@ -120,14 +120,10 @@ spec:
             - name: CLUSTER_CA_BUNDLE
               value: "{{ . }}"
           {{- end }}
-          {{- with .Values.settings.clusterName }}
             - name: CLUSTER_NAME
-              value: "{{ . | replace "CLUSTER_NAME" .Values.clusterID }}"
-          {{- end }}
-          {{- with .Values.settings.clusterEndpoint }}
+              value: "{{ .Values.settings.clusterName | replace "CLUSTER_NAME" .Values.clusterID }}"
             - name: CLUSTER_ENDPOINT
-              value: "{{ . | replace "CLUSTER_NAME" .Values.clusterID | replace "CLUSTER_ENDPOINT" (printf "%s.%s" "http://api" .Values.baseDomain) }}"
-          {{- end }}
+              value: "{{ .Values.settings.clusterEndpoint | replace "CLUSTER_NAME" .Values.clusterID | replace "CLUSTER_ENDPOINT" (printf "%s.%s" "http://api" .Values.baseDomain) }}"
           {{- with .Values.settings.isolatedVPC }}
             - name: ISOLATED_VPC
               value: "{{ . }}"
@@ -140,10 +136,8 @@ spec:
             - name: VM_MEMORY_OVERHEAD_PERCENT
               value: "{{ . }}"
           {{- end }}
-          {{- with .Values.settings.interruptionQueue }}
             - name: INTERRUPTION_QUEUE
-              value: "{{ . | replace "CLUSTER_NAME" .Values.clusterID }}"
-          {{- end }}
+              value: "{{ .Values.settings.interruptionQueue | replace "CLUSTER_NAME" .Values.clusterID }}"
           {{- with .Values.settings.reservedENIs }}
             - name: RESERVED_ENIS
               value: "{{ . }}"

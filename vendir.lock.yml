@@ -2,8 +2,8 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: fix parenthesis
-      sha: c64204ac0c66ae8e375938542eb96bd599e5d986
+      commitTitle: fix deployment and np
+      sha: bf0c1b1c6089645e694373f9c9579134ab3ce7d2
     path: karpenter-provider-aws-upstream
   path: vendor
 - contents:

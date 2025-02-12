@@ -11,11 +11,9 @@ spec:
       {{- include "karpenter.selectorLabels" . | nindent 6 }}
   ingress:
   - ports:
-    - port: {{ .Values.karpenter.controller.metrics.port }}
+    - port: {{ .Values.controller.metrics.port }}
       protocol: TCP
-    - port: {{ .Values.karpenter.controller.healthProbe.port }}
-      protocol: TCP
-    - port: {{ .Values.karpenter.webhook.port }}
+    - port: {{ .Values.controller.healthProbe.port }}
       protocol: TCP
   egress:
   - {}
