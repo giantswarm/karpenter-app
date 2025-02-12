@@ -1,0 +1,13 @@
+apiVersion: vendir.k14s.io/v1alpha1
+directories:
+- contents:
+  - git:
+      commitTitle: migrate old customizations
+      sha: 5a8ab1ab29df210da4284dde4623f4965fe944b6
+    path: karpenter-provider-aws-upstream
+  path: vendor
+- contents:
+  - directory: {}
+    path: .
+  path: helm/karpenter/templates
+kind: LockConfig
