@@ -126,7 +126,7 @@ spec:
           {{- end }}
           {{- with .Values.settings.clusterEndpoint }}
             - name: CLUSTER_ENDPOINT
-              value: "{{ . | replace "CLUSTER_NAME" .Values.clusterID | replace "CLUSTER_ENDPOINT" (printf "%s.%s" "http://api" .Values.baseDomain }}"
+              value: "{{ . | replace "CLUSTER_NAME" .Values.clusterID | replace "CLUSTER_ENDPOINT" (printf "%s.%s" "http://api" .Values.baseDomain) }}"
           {{- end }}
           {{- with .Values.settings.isolatedVPC }}
             - name: ISOLATED_VPC
