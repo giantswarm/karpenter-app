@@ -36,7 +36,7 @@ spec:
 {{- end -}}
 {{ if .Values.flowSchema.workload.create }}
 ---
-apiVersion: flowcontrol.apiserver.k8s.io/v1beta2
+apiVersion: flowcontrol.apiserver.k8s.io/v1
 kind: FlowSchema
 metadata:
   name: karpenter-workload
