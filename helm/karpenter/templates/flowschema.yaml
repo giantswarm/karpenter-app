@@ -1,6 +1,6 @@
 {{ if .Values.flowSchema.leaderElection.create }}
 ---
-apiVersion: flowcontrol.apiserver.k8s.io/v1beta2
+apiVersion: flowcontrol.apiserver.k8s.io/v1
 kind: FlowSchema
 metadata:
   name: karpenter-leader-election
