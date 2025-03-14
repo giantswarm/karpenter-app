@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.5] - 2025-03-14
+
 ### Changed
 
 - Update flowschema API version.
@@ -97,7 +99,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release of Karpenter-app
 
-[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v0.9.4...HEAD
+[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v0.9.5...HEAD
+[0.9.5]: https://github.com/giantswarm/karpenter-app/compare/v0.9.4...v0.9.5
 [0.9.4]: https://github.com/giantswarm/karpenter-app/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/giantswarm/karpenter-app/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/giantswarm/karpenter-app/compare/v0.9.1...v0.9.2
