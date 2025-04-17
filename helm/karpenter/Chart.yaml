@@ -10,10 +10,11 @@ keywords:
   - scheduler
   - autoscaling
   - lifecycle
-home: https://karpenter.sh/
+home: https://github.com/giantswarm/karpenter-app
 icon: https://s.giantswarm.io/app-icons/karpenter/1/light.svg
 sources:
   - https://github.com/aws/karpenter/
+  - https://karpenter.sh/
 annotations:
   application.giantswarm.io/team: phoenix
 dependencies:
