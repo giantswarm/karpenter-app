@@ -35,9 +35,6 @@ Common labels
 */}}
 {{- define "karpenter.labels" -}}
 helm.sh/chart: {{ include "karpenter.chart" . }}
-application.giantswarm.io/team: {{ index .Chart.Annotations "application.giantswarm.io/team" | default "phoenix" | quote }}
-giantswarm.io/managed-by: {{ .Release.Name | quote }}
-giantswarm.io/service-type: managed
 {{ include "karpenter.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
@@ -78,12 +75,6 @@ Karpenter image to use
 {{- end }}
 {{- end }}
 
-{{/*
-Karpenter controller container name
-*/}}
-{{- define "karpenter.controller.containerName" -}}
-{{- .Values.controller.containerName | default "controller" -}}
-{{- end -}}
 
 {{/* Get PodDisruptionBudget API Version */}}
 {{- define "karpenter.pdb.apiVersion" -}}
@@ -149,11 +140,3 @@ This works because Helm treats dictionaries as mutable objects and allows passin
 {{- include "karpenter.patchLabelSelector" (merge (dict "_target" $constraint) $) }}
 {{- end }}
 {{- end }}
-
-{{- define "giantswarm.irsa.annotation" -}}
-{{- if (or (eq .Values.region "cn-north-1") (eq .Values.region "cn-northwest-1"))}}
-eks.amazonaws.com/role-arn: arn:aws-cn:iam::{{ .Values.accountID }}:role/{{ .Values.clusterID }}-karpenter
-{{- else }}
-eks.amazonaws.com/role-arn: arn:aws:iam::{{ .Values.accountID }}:role/{{ .Values.clusterID }}-karpenter
-{{- end -}}
-{{- end -}}
