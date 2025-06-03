@@ -6,7 +6,7 @@ directories:
       - path: karpenter-provider-aws-upstream
         git:
           url: https://github.com/giantswarm/karpenter-provider-aws-upstream
-          ref: "release-v1.2.4"
+          ref: "main"
         includePaths:
           - charts/karpenter/templates/**/*
           - pkg/apis/crds/**/*.yaml
