@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated Karpenter to `v1.5.0`.
+- Update README.
+
 ### Removed
 
 - Drop deprecated `flowcontrol.apiserver.k8s.io/v1beta2` version of FlowSchema and PriorityLevelConfiguration.
