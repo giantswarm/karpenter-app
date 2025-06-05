@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Migrate to use `abs` to build the chart.
+
 ### Removed
 
 - Drop deprecated `flowcontrol.apiserver.k8s.io/v1beta2` version of FlowSchema and PriorityLevelConfiguration.
