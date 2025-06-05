@@ -1,0 +1,13 @@
+apiVersion: vendir.k14s.io/v1alpha1
+directories:
+- contents:
+  - git:
+      commitTitle: Gs customizations (#1)...
+      sha: 10d469ccb3bf13f496e7d35bd13e022282f32b8e
+    path: karpenter-provider-aws-upstream
+  path: vendor
+- contents:
+  - directory: {}
+    path: .
+  path: helm/karpenter/templates
+kind: LockConfig

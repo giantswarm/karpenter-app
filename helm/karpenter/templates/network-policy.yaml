@@ -10,15 +10,13 @@ spec:
     matchLabels:
       {{- include "karpenter.selectorLabels" . | nindent 6 }}
   ingress:
-  - ports:
-    - port: {{ .Values.karpenter.controller.metrics.port }}
-      protocol: TCP
-    - port: {{ .Values.karpenter.controller.healthProbe.port }}
-      protocol: TCP
-    - port: {{ .Values.karpenter.webhook.port }}
-      protocol: TCP
+    - ports:
+        - port: {{ .Values.controller.metrics.port }}
+          protocol: TCP
+        - port: {{ .Values.controller.healthProbe.port }}
+          protocol: TCP
   egress:
-  - {}
+    - {}
   policyTypes:
-  - Egress
-  - Ingress
+    - Egress
+    - Ingress
