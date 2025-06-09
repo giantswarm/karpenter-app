@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated Karpenter to `v1.5.0`.
 - Update README.
+- Migrate to use `abs` to build the chart.
 
 ### Removed
 

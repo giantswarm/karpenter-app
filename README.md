@@ -8,6 +8,7 @@ If you want to do changes to the app, please do so in that repository and then r
 ```bash
 make build
 ```
+
 > [!WARNING]  
 > These files are not generated and need to be maintained manually:
 > - `values.schema.json`
