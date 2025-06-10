@@ -2,8 +2,8 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: Gs customizations (#1)...
-      sha: 10d469ccb3bf13f496e7d35bd13e022282f32b8e
+      commitTitle: Add Job to block chart deletion until nodeclaims are deleted
+      sha: d3395ee3d073de7f29a06bfd4be1ab3e34fc7d79
     path: karpenter-provider-aws-upstream
   path: vendor
 - contents:

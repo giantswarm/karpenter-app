@@ -1,0 +1,18 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "karpenter.fullname" . }}-nodeclaims-cleanup
+  annotations:
+    helm.sh/hook: pre-delete
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+    helm.sh/hook-weight: "-1"
+  labels:
+    {{- include "karpenter.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "karpenter.fullname" . }}-nodeclaims-cleanup
+subjects:
+- kind: ServiceAccount
+  name: {{ include "karpenter.fullname" . }}-nodeclaims-cleanup
+  namespace: {{ .Release.Namespace }}
