@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add Helm `pre-delete` hook to block the `karpenter` app deletion until there are no `nodeclaims` in the workload cluster to give time to karpenter to clean up.
+
 ## [1.0.0] - 2025-06-09
 
 ### Changed
