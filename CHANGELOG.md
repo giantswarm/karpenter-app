@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Move PSS to policy-exceptions namespace.
+- Move to Default Catalog.
+
 ## [1.1.1] - 2025-09-05
 
 ### Changed
