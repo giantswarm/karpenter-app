@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2025-10-02
+
 ### Changed
 
 - Updated karpenter to 1.7.1
@@ -164,7 +166,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release of Karpenter-app
 
-[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/giantswarm/karpenter-app/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/giantswarm/karpenter-app/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/giantswarm/karpenter-app/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/giantswarm/karpenter-app/compare/v1.0.0...v1.1.0
