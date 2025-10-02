@@ -121,9 +121,9 @@ controller:
     # -- Repository path to the controller image.
     repository: gsoci.azurecr.io/giantswarm/karpenter-controller
     # -- Tag of the controller image.
-    tag: 1.6.3
+    tag: 1.7.1
     # -- SHA256 digest of the controller image.
-    digest: sha256:b76551596698381c4940c15093afc733357b9ffffd5c97612d324b7a794aa0ed
+    digest: sha256:aee161e5f0e7b853eec66e94310b86b86ed433a38956b65223cb767893085958
   # -- Additional environment variables for the controller pod.
   env: []
   # - name: AWS_REGION
