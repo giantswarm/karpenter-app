@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add e2e tests for this app.
+
 ## [1.3.0] - 2025-10-02
 
 ### Changed
