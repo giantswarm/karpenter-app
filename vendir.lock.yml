@@ -2,8 +2,8 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: Change namespace for PolicyException to 'policy-exceptions'
-      sha: 722d2c33a9da9c8cefc80d7e06850d747b9e94da
+      commitTitle: Merge branch 'aws:main' into main
+      sha: fc05bf02e23a9bc36155e2cf86d908beb3b87927
     path: karpenter-provider-aws-upstream
   path: vendor
 - contents:
