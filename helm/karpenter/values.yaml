@@ -214,7 +214,7 @@ settings:
     # Setting this to true will enable node repair.
     nodeRepair: true
     # -- nodeOverlay is ALPHA and is disabled by default.
-    # Setting this will allow the use of node overlay to impact scheduling decisions 
+    # Setting this will allow the use of node overlay to impact scheduling decisions
     nodeOverlay: false
     # -- reservedCapacity is BETA and is enabled by default.
     # Setting this will enable native on-demand capacity reservation support.
