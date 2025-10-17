@@ -2,8 +2,8 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: Merge branch 'aws:main' into main
-      sha: fc05bf02e23a9bc36155e2cf86d908beb3b87927
+      commitTitle: 'Merge pull request #5 from giantswarm/addpermisions...'
+      sha: 42cd2fd989b58730bcee1ce91b3d3d4d7707e0c4
     path: karpenter-provider-aws-upstream
   path: vendor
 - contents:

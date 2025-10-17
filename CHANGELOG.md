@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated karpenter to 1.8.1
+- Fixes RBAC issues when OwnerReferencesPermissionEnforcement featuregate is enabled by allowing finalizers sub'resource modification.
 
 ## [1.3.0] - 2025-10-02
 
