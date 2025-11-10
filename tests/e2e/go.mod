@@ -2,7 +2,7 @@ module e2e
 
 go 1.24.2
 
-toolchain go1.24.3
+toolchain go1.25.4
 
 // Needed because module declares its path as: dario.cat/mergo
 replace github.com/imdario/mergo => github.com/imdario/mergo v0.3.16
