@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/giantswarm/apiextensions-application/api/v1alpha1"
-	"github.com/giantswarm/apptest-framework/pkg/state"
-	"github.com/giantswarm/apptest-framework/pkg/suite"
+	"github.com/giantswarm/apptest-framework/v2/pkg/state"
+	"github.com/giantswarm/apptest-framework/v2/pkg/suite"
 	"github.com/giantswarm/clustertest/v2/pkg/application"
 	"github.com/giantswarm/clustertest/v2/pkg/client"
 	"github.com/giantswarm/clustertest/v2/pkg/logger"
