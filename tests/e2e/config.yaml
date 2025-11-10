@@ -1,0 +1,7 @@
+appName: "karpenter"
+repoName: "karpenter-app"
+appCatalog: "default"
+
+# CAPI providers to test against when triggering `/run app-test-suites` from a PR
+providers:
+- capa
