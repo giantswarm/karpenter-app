@@ -6,7 +6,7 @@ go 1.25.4
 replace github.com/imdario/mergo => github.com/imdario/mergo v0.3.16
 
 // Needed because module declares its path as: al.essio.dev/pkg/shellescape
-replace github.com/alessio/shellescape => al.essio.dev/pkg/shellescape v1.4.2
+replace github.com/alessio/shellescape => al.essio.dev/pkg/shellescape v1.6.0
 
 require (
 	github.com/giantswarm/apiextensions-application v0.6.2
