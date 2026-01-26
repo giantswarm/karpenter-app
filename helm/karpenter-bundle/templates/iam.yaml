@@ -1,0 +1,115 @@
+{{- $cmvalues := (include "karpenter-bundle.crossplaneConfigData" .) | fromYaml -}}
+{{- $accountID := $cmvalues.accountID -}}
+{{- $awsPartition := $cmvalues.awsPartition | default "aws" -}}
+{{- $workersIamRole := include "karpenter-bundle.workersIamRole" . -}}
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: {{ .Values.clusterID }}-karpenter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    tags:
+      giantswarm.io/cluster: {{ .Values.clusterID }}
+      giantswarm.io/managed-by: {{ .Release.Name | quote }}
+      sigs.k8s.io/cluster-api-provider-aws/cluster/{{ .Values.clusterID }}: owned
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {{- include "karpenter-bundle.trustPolicyStatements" . | nindent 10 }}
+        ]
+      }
+    inlinePolicy:
+      - name: karpenter-policy
+        policy: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Resource": "*",
+                "Action": [
+                  "ec2:CreateFleet",
+                  "ec2:CreateLaunchTemplate",
+                  "ec2:CreateTags",
+                  "ec2:DeleteLaunchTemplate",
+                  "ec2:RunInstances",
+                  "ec2:TerminateInstances",
+                  "ec2:DescribeAvailabilityZones",
+                  "ec2:DescribeImages",
+                  "ec2:DescribeInstances",
+                  "ec2:DescribeInstanceTypeOfferings",
+                  "ec2:DescribeInstanceTypes",
+                  "ec2:DescribeLaunchTemplates",
+                  "ec2:DescribeSecurityGroups",
+                  "ec2:DescribeSpotPriceHistory",
+                  "ec2:DescribeSubnets",
+                  "pricing:GetProducts",
+                  "ssm:GetParameter",
+                  "iam:ListInstanceProfiles"
+                ]
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "sqs:DeleteMessage",
+                  "sqs:GetQueueAttributes",
+                  "sqs:GetQueueUrl",
+                  "sqs:ReceiveMessage"
+                ],
+                "Resource": "arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter"
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "iam:PassRole"
+                ],
+                "Resource": "{{ $workersIamRole }}"
+              }
+            ]
+          }
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: {{ .Values.clusterID }}-karpenter-nodeclassgenerator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    tags:
+      giantswarm.io/cluster: {{ .Values.clusterID }}
+      giantswarm.io/managed-by: {{ .Release.Name | quote }}
+      sigs.k8s.io/cluster-api-provider-aws/cluster/{{ .Values.clusterID }}: owned
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {{- include "karpenter-bundle.trustPolicyStatements" . | nindent 10 }}
+        ]
+      }
+    inlinePolicy:
+      - name: karpenter-policy
+        policy: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Resource": "*",
+                "Action": [
+                  "ec2:DescribeAutoScalingGroups",
+                  "ec2:DescribeLaunchTemplates",
+                  "ec2:DescribeLaunchTemplateVersions"
+                ]
+              }
+            ]
+          }

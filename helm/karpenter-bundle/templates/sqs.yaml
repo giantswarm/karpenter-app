@@ -1,0 +1,247 @@
+{{- $cmvalues := (include "karpenter-bundle.crossplaneConfigData" .) | fromYaml -}}
+{{- $accountID := $cmvalues.accountID -}}
+{{- $awsPartition := $cmvalues.awsPartition | default "aws" -}}
+apiVersion: sqs.aws.upbound.io/v1beta1
+kind: Queue
+metadata:
+  name: {{ .Values.clusterID }}-karpenter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    name: {{ .Values.clusterID }}-karpenter
+    tags:
+      giantswarm.io/cluster: {{ .Values.clusterID }}
+      giantswarm.io/used-for: termination-handler
+      giantswarm.io/managed-by: {{ .Release.Name | quote }}
+      sigs.k8s.io/cluster-api-provider-aws/cluster/{{ .Values.clusterID }}: owned
+    region: {{ .Values.region }}
+    messageRetentionSeconds: 300
+---
+apiVersion: sqs.aws.upbound.io/v1beta1
+kind: QueuePolicy
+metadata:
+  name: {{ .Values.clusterID }}-karpenter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    region: {{ .Values.region }}
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Id": "EC2InterruptionPolicy",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": [
+                "events.amazonaws.com",
+                "sqs.amazonaws.com"
+              ]
+            },
+            "Action": "sqs:SendMessage",
+            "Resource": "arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter"
+          }
+        ]
+      }
+    queueUrlRef:
+      name: {{ .Values.clusterID }}-karpenter
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Rule
+metadata:
+  name: {{ .Values.clusterID }}-karpenter-health
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+    giantswarm.io/used-for: karpenter-health
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    tags:
+      giantswarm.io/cluster: {{ .Values.clusterID }}
+      giantswarm.io/managed-by: {{ .Release.Name | quote }}
+      sigs.k8s.io/cluster-api-provider-aws/cluster/{{ .Values.clusterID }}: owned
+    region: {{ .Values.region }}
+    eventBusName: default
+    eventPattern: |
+      {
+        "source": [
+          "aws.health"
+        ],
+        "detail-type": [
+          "AWS Health Event"
+        ]
+      }
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Rule
+metadata:
+  name: {{ .Values.clusterID }}-karpenter-spotinterruption
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+    giantswarm.io/used-for: karpenter-spotinterruption
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    tags:
+      giantswarm.io/cluster: {{ .Values.clusterID }}
+      giantswarm.io/managed-by: {{ .Release.Name | quote }}
+      sigs.k8s.io/cluster-api-provider-aws/cluster/{{ .Values.clusterID }}: owned
+    region: {{ .Values.region }}
+    eventBusName: default
+    eventPattern: |
+      {
+        "source": [
+          "aws.ec2"
+        ],
+        "detail-type": [
+          "EC2 Spot Instance Interruption Warning"
+        ]
+      }
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Rule
+metadata:
+  name: {{ .Values.clusterID }}-karpenter-rebalance
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+    giantswarm.io/used-for: karpenter-rebalance
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    tags:
+      giantswarm.io/cluster: {{ .Values.clusterID }}
+      giantswarm.io/managed-by: {{ .Release.Name | quote }}
+      sigs.k8s.io/cluster-api-provider-aws/cluster/{{ .Values.clusterID }}: owned
+    region: {{ .Values.region }}
+    eventBusName: default
+    eventPattern: |
+      {
+        "source": [
+          "aws.ec2"
+        ],
+        "detail-type": [
+          "EC2 Instance Rebalance Recommendation"
+        ]
+      }
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Rule
+metadata:
+  name: {{ .Values.clusterID }}-karpenter-statechange
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+    giantswarm.io/used-for: karpenter-statechange
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    tags:
+      giantswarm.io/cluster: {{ .Values.clusterID }}
+      giantswarm.io/managed-by: {{ .Release.Name | quote }}
+      sigs.k8s.io/cluster-api-provider-aws/cluster/{{ .Values.clusterID }}: owned
+    region: {{ .Values.region }}
+    eventBusName: default
+    eventPattern: |
+      {
+        "source": [
+          "aws.ec2"
+        ],
+        "detail-type": [
+          "EC2 Instance State-change Notification"
+        ]
+      }
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Target
+metadata:
+  name: {{ .Values.clusterID }}-health
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    arn: arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter
+    region: {{ .Values.region }}
+    eventBusName: default
+    targetId: karpenter
+    ruleSelector:
+      matchLabels:
+        giantswarm.io/cluster: {{ .Values.clusterID }}
+        giantswarm.io/used-for: karpenter-health
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Target
+metadata:
+  name: {{ .Values.clusterID }}-spotinterruption
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    arn: arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter
+    region: {{ .Values.region }}
+    eventBusName: default
+    targetId: karpenter
+    ruleSelector:
+      matchLabels:
+        giantswarm.io/cluster: {{ .Values.clusterID }}
+        giantswarm.io/used-for: karpenter-spotinterruption
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Target
+metadata:
+  name: {{ .Values.clusterID }}-rebalance
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    arn: arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter
+    region: {{ .Values.region }}
+    eventBusName: default
+    targetId: karpenter
+    ruleSelector:
+      matchLabels:
+        giantswarm.io/cluster: {{ .Values.clusterID }}
+        giantswarm.io/used-for: karpenter-rebalance
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Target
+metadata:
+  name: {{ .Values.clusterID }}-statechange
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    arn: arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter
+    region: {{ .Values.region }}
+    eventBusName: default
+    targetId: karpenter
+    ruleSelector:
+      matchLabels:
+        giantswarm.io/cluster: {{ .Values.clusterID }}
+        giantswarm.io/used-for: karpenter-statechange

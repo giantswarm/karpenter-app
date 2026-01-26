@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add e2e tests for this app.
+- Add `karpenter-bundle` chart that consolidates `karpenter-app` and `karpenter-crossplane-resources` into a single deployable bundle. The bundle includes:
+  - HelmRelease and OCIRepository for deploying karpenter to workload clusters
+  - IAM roles for karpenter and nodeclassgenerator via Crossplane
+  - SQS queue and CloudWatch event rules for interruption handling
 
 ### Fixed
 

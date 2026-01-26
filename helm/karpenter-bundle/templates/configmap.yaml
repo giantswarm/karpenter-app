@@ -1,0 +1,11 @@
+{{- include "giantswarm.setValues" . -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "karpenter-bundle.configMapName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+data:
+  values: |
+  {{- (include "karpenter-bundle.karpenterValues" .) | nindent 4 }}
