@@ -193,8 +193,7 @@ Injects IAM role ARN annotation and settings based on ConfigMap lookup.
 */}}
 {{- define "giantswarm.setValues" -}}
 {{- $cmvalues := (include "karpenter-bundle.crossplaneConfigData" .) | fromYaml -}}
-{{- $roleArn := printf "arn:%s:iam::%s:role/%s-karpenter" ($cmvalues.awsPartition | default "aws") $cmvalues.accountID $.Values.clusterID -}}
-{{- $_ := set .Values.serviceAccount.annotations "eks.amazonaws.com/role-arn" $roleArn -}}
+{{- $_ := set .Values.serviceAccount.annotations "eks.amazonaws.com/role-arn" (include "karpenter-bundle.karpenterRoleArn" .) -}}
 
 {{- /* Set clusterName in settings if not already set */ -}}
 {{- if not .Values.settings.clusterName -}}
