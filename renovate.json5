@@ -9,5 +9,9 @@
       "matchFileNames": ["helm/karpenter/values.yaml"],
       "enabled": false,
     },
-  ],
+    {
+      "matchFileNames": ["helm/karpenter-bundle/values.yaml"],
+      "enabled": false,
+    },
+  ]
 }
