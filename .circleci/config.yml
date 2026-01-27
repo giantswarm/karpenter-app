@@ -2,22 +2,34 @@ version: 2.1
 orbs:
   architect: giantswarm/architect@6.12.0
 
+job_filters: &job_filters
+  filters:
+    tags:
+      only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+    branches:
+      ignore:
+        - main
+
 workflows:
-  version: 2
-  build:
+  package-and-push-chart-on-tag:
     jobs:
     - architect/push-to-app-catalog:
         context: architect
         executor: app-build-suite
-        name: push-to-app-catalog
+        name: package and push karpenter chart
         app_catalog: default-catalog
         app_catalog_test: default-test-catalog
         chart: karpenter
-        filters:
-            # Trigger the job also on git tag.
-          tags:
-            only: /^v.*/
-          branches:
-            ignore:
-            - main
-            - master
+        <<: *job_filters
+
+    - architect/push-to-app-catalog:
+        context: architect
+        executor: app-build-suite
+        name: package and push karpenter-bundle chart
+        app_catalog: default-catalog
+        app_catalog_test: default-test-catalog
+        chart: karpenter-bundle
+        explicit_allow_chart_name_mismatch: true
+        requires:
+          - package and push karpenter chart
+        <<: *job_filters

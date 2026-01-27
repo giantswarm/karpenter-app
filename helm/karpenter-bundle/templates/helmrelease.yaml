@@ -1,0 +1,44 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: {{ .Values.clusterID }}-karpenter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  url: {{ .Values.ociRepositoryUrl }}
+  interval: 1h
+  ref:
+    tag: {{ .Chart.Version }}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: {{ .Values.clusterID }}-karpenter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  interval: 5m
+  install:
+    createNamespace: true
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  kubeConfig:
+    secretRef:
+      name: {{ .Values.clusterID }}-kubeconfig
+  chartRef:
+    kind: OCIRepository
+    name: {{ .Values.clusterID }}-karpenter
+    namespace: {{ .Release.Namespace }}
+  releaseName: karpenter
+  targetNamespace: karpenter
+  storageNamespace: karpenter
+  valuesFrom:
+    - kind: ConfigMap
+      name: {{ include "karpenter-bundle.configMapName" . }}
+      valuesKey: values
+      optional: false
