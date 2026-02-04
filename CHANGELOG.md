@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update ABS config to replace `.appVersion` in Chart.yaml with version detected by ABS.
+
+### Fixed
+
+- Use `.Chart.AppVersion` instead of `.Chart.Version` for OCIRepository tag.
+
 ## [2.0.0] - 2026-01-28
 
 ### Added
