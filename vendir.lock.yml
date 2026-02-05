@@ -2,8 +2,8 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'Merge pull request #5 from giantswarm/addpermisions...'
-      sha: 42cd2fd989b58730bcee1ce91b3d3d4d7707e0c4
+      commitTitle: Add PodLogs and PodMonitor resources for observability (#6)...
+      sha: da8cd1033204ca9a5f71e816e26f67eb712a17b9
     path: karpenter-provider-aws-upstream
   path: vendor
 - contents:
