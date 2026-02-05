@@ -1,0 +1,24 @@
+{{- if .Values.podLogs.enabled }}
+apiVersion: monitoring.grafana.com/v1alpha2
+kind: PodLogs
+metadata:
+  name: {{ include "karpenter.fullname" $ }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "karpenter.labels" $ | nindent 4 }}
+  {{- with .Values.additionalAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  namespaceSelector:
+    matchLabels:
+      kubernetes.io/metadata.name: {{ $.Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "karpenter.selectorLabels" $ | nindent 6 }}
+  relabelings:
+  - action: replace
+    replacement: {{ .Values.podLogs.tenant }}
+    targetLabel: giantswarm_observability_tenant
+{{- end }}
