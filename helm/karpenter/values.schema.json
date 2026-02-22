@@ -264,6 +264,20 @@
             "properties": {},
             "type": "object"
         },
+        "podLogs": {
+            "properties": {
+              "enabled": {
+                "description": "Specifies whether a PodLogs resource should be created for log collection",
+                "type": "boolean",
+                "default": false
+              },
+              "tenant": {
+                "description": "The tenant name for routing logs to the correct Grafana organization. Must match a tenant configured in your observability platform.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+        },
         "podSecurityContext": {
             "properties": {
                 "fsGroup": {
