@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `PodLogs` and `PodMonitor` custom resources for observability data ingestion.
+
 ## [2.0.0] - 2026-01-28
 
 ### Added

@@ -63,6 +63,12 @@ strategy:
 podLabels: {}
 # -- Additional annotations for the pod.
 podAnnotations: {}
+podLogs:
+  # -- Specifies whether a PodLogs resource should be created for log collection.
+  enabled: false
+  # -- The tenant name for routing logs to the correct Grafana organization.
+  # Must match a tenant configured in your observability platform.
+  tenant: ""
 podDisruptionBudget:
   name: karpenter
   maxUnavailable: 1
