@@ -315,6 +315,20 @@
         "priorityClassName": {
             "type": "string"
         },
+        "proxy": {
+            "type": "object",
+            "properties": {
+                "http": {
+                    "type": "string"
+                },
+                "https": {
+                    "type": "string"
+                },
+                "noProxy": {
+                    "type": "string"
+                }
+            }
+        },
         "replicas": {
             "type": "integer"
         },
