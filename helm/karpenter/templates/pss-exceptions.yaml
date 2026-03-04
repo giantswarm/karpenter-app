@@ -6,7 +6,7 @@ apiVersion: kyverno.io/v2beta1
 {{- end }}
 kind: PolicyException
 metadata:
-  name: {{ include "karpenter.fullname" . }}
+  name: karpenter
   namespace: policy-exceptions
   labels:
     {{- include "karpenter.labels" . | nindent 4 }}

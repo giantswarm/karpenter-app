@@ -4,3 +4,4 @@ destination: ./build
 generate-metadata: true
 replace-chart-version-with-git: true
 giantswarm-validator-ignored-checks: C0001
+ct-config: ./.circleci/ct-config.yaml

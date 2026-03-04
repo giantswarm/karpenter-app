@@ -1,17 +1,11 @@
 {
   "extends": [
-    // Base config - https://github.com/giantswarm/renovate-presets/blob/main/default.json5
     "github>giantswarm/renovate-presets:default.json5",
   ],
-  // Take `ignorePaths` from preset but override for repo-specific files
   "packageRules": [
     {
-      "matchFileNames": ["helm/karpenter/values.yaml"],
+      "matchFileNames": ["helm/karpenter/values.yaml", "helm/karpenter-bundle/values.yaml"],
       "enabled": false,
     },
-    {
-      "matchFileNames": ["helm/karpenter-bundle/values.yaml"],
-      "enabled": false,
-    },
-  ]
+  ],
 }
