@@ -12,8 +12,5 @@
         "region": {
             "type": "string"
         }
-    },
-    "required": [
-        "clusterID"
-    ]
+    }
 }
