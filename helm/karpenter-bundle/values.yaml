@@ -1,7 +1,7 @@
 # ─── BUNDLE-ONLY ─────────────────────────────────────────────────────────────
 # These values are used by the bundle chart only and never forwarded to the workload chart.
 ociRepositoryUrl: oci://gsoci.azurecr.io/charts/giantswarm/karpenter
-# clusterID: ""
+clusterID: ""
 region: ""
 workersIamRole: ""
 
