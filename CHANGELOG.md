@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Migrate workload chart to use unmodified upstream Karpenter v1.8.1 chart as a Helm dependency (`alias: upstream`), eliminating fork maintenance.
+- Bundle chart: add `giantswarm.workloadValues` transformer to route values under `upstream:` key with extras (`podLogs`, `global`) at top level.
+- Bundle chart: convert proxy settings to `controller.env` entries for upstream compatibility.
+- Bundle chart: add `giantswarm.combineImage` helper to merge split `registry`+`repository` into single `repository` path.
+- Restructure bundle `values.yaml` into annotated BUNDLE-ONLY / UPSTREAM / EXTRAS sections.
+
+### Removed
+
+- Remove all forked upstream templates from workload chart (replaced by upstream dependency).
+- Remove `vendir.yml`, `vendir.lock.yml`, `vendor/` directory, and `Makefile.custom.mk`.
+
 ## [2.1.0] - 2026-03-01
 
 ### Added
