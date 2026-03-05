@@ -185,6 +185,20 @@ spec:
             - name: DISABLE_DRY_RUN
               value: "{{ tpl (toString .) $ }}"
           {{- end }}
+          {{- with .Values.proxy }}
+          {{- if .http }}
+            - name: HTTP_PROXY
+              value: {{ .http | quote }}
+          {{- end }}
+          {{- if .https }}
+            - name: HTTPS_PROXY
+              value: {{ .https | quote }}
+          {{- end }}
+          {{- if .noProxy }}
+            - name: NO_PROXY
+              value: {{ .noProxy | quote }}
+          {{- end }}
+          {{- end }}
           {{- with .Values.controller.env }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

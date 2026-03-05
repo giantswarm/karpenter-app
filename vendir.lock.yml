@@ -2,8 +2,8 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'Merge pull request #5 from giantswarm/addpermisions...'
-      sha: 42cd2fd989b58730bcee1ce91b3d3d4d7707e0c4
+      commitTitle: 'Deployment: Add HTTP proxy support. (#7)'
+      sha: 98af17f36196792a7aa30173adaab39111af10ab
     path: karpenter-provider-aws-upstream
   path: vendor
 - contents:

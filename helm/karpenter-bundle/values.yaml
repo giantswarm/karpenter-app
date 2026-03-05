@@ -63,6 +63,12 @@ strategy:
 podLabels: {}
 # -- Additional annotations for the pod.
 podAnnotations: {}
+podLogs:
+  # -- Specifies whether a PodLogs resource should be created for log collection.
+  enabled: false
+  # -- The tenant name for routing logs to the correct Grafana organization.
+  # Must match a tenant configured in your observability platform.
+  tenant: ""
 podDisruptionBudget:
   name: karpenter
   maxUnavailable: 1
@@ -250,6 +256,15 @@ flowSchema:
     create: true
     # -- Specifies the precedence of the workload flowSchema.
     matchingPrecedence: 1000
+
+# -- HTTP proxy settings.
+proxy:
+  # -- HTTP proxy URL.
+  http: ""
+  # -- HTTPS proxy URL.
+  https: ""
+  # -- Comma-separated list of hosts that should be excluded from proxying.
+  noProxy: ""
 
 global:
   podSecurityStandards:
