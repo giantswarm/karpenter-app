@@ -17,6 +17,10 @@ sources:
   - https://karpenter.sh/
 annotations:
   io.giantswarm.application.team: phoenix
+  io.giantswarm.application.audience: all
+  io.giantswarm.application.managed: "true"
+  io.giantswarm.application.upstream-chart-url: https://github.com/aws/karpenter
+  io.giantswarm.application.restrictions.compatible-providers: "aws"
 maintainers:
   - name: giantswarm/team-phoenix
     email: team-phoenix@giantswarm.io
