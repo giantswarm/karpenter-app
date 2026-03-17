@@ -9,8 +9,7 @@ workersIamRole: ""
 # These values are transformed and routed under the `upstream:` key to the workload chart.
 controller:
   image:
-    registry: gsoci.azurecr.io
-    repository: giantswarm/karpenter-controller
+    repository: gsoci.azurecr.io/giantswarm/karpenter-controller
     tag: "1.8.1"
     digest: "sha256:35044629d7b890852fd770a8f69b303f3cbbd5695beef5af670faab1da269b17"
   resources:

@@ -202,16 +202,6 @@ Injects IAM role ARN annotation and settings based on ConfigMap lookup.
 {{- end -}}
 
 {{/*
-Reusable: combine GS split registry+repository into upstream single repository.
-*/}}
-{{- define "giantswarm.combineImage" -}}
-{{- $result := deepCopy . -}}
-{{- $_ := set $result "repository" (printf "%s/%s" .registry .repository) -}}
-{{- $_ := unset $result "registry" -}}
-{{- $result | toYaml -}}
-{{- end -}}
-
-{{/*
 Transform flat bundle values into the nested workload chart structure.
 Routes upstream values under `upstream:` key and extras at top level.
 */}}
@@ -227,12 +217,8 @@ Routes upstream values under `upstream:` key and extras at top level.
 {{- $specialKeys := list "controller" "proxy" -}}
 {{- $reservedKeys := concat $bundleOnlyKeys $extrasKeys $specialKeys -}}
 
-{{/* Controller: combine GS split image format */}}
+{{/* Controller: pass through as-is */}}
 {{- $controller := deepCopy .Values.controller -}}
-{{- if and $controller.image $controller.image.registry $controller.image.repository -}}
-  {{- $_ := set $controller.image "repository" (printf "%s/%s" $controller.image.registry $controller.image.repository) -}}
-  {{- $_ := unset $controller.image "registry" -}}
-{{- end -}}
 
 {{/* Proxy: convert to controller.env entries */}}
 {{- $proxyEnv := list -}}
