@@ -1,6 +1,13 @@
 # ─── UPSTREAM ────────────────────────────────────────────────────────────────
 upstream:
   nameOverride: karpenter
+  additionalClusterRoleRules:
+    - apiGroups: ["karpenter.sh"]
+      resources: ["nodepools/finalizers", "nodeclaims/finalizers"]
+      verbs: ["update"]
+    - apiGroups: [""]
+      resources: ["nodes/finalizers"]
+      verbs: ["update"]
 
 # ─── EXTRAS ──────────────────────────────────────────────────────────────────
 podLogs:
