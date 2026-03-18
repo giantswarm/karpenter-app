@@ -2,7 +2,7 @@ apiVersion: v2
 name: karpenter
 description: A Helm chart for Karpenter, an open-source node provisioning project built for Kubernetes.
 type: application
-version: "2.1.0"
+version: 2.2.0
 appVersion: 1.8.1
 keywords:
   - cluster
@@ -17,6 +17,10 @@ sources:
   - https://karpenter.sh/
 annotations:
   io.giantswarm.application.team: phoenix
+  io.giantswarm.application.audience: all
+  io.giantswarm.application.managed: "true"
+  io.giantswarm.application.upstream-chart-url: https://github.com/aws/karpenter
+  io.giantswarm.application.restrictions.compatible-providers: "aws"
 maintainers:
   - name: giantswarm/team-phoenix
     email: team-phoenix@giantswarm.io

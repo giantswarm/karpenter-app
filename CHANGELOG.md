@@ -20,6 +20,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove all forked upstream templates from workload chart (replaced by upstream dependency).
 - Remove `vendir.yml`, `vendir.lock.yml`, `vendor/` directory, and `Makefile.custom.mk`.
 
+## [2.2.0] - 2026-03-09
+
+### Changed
+
+- Add `io.giantswarm.application.audience: all` annotation to publish the app to the customer Backstage catalog.
+- Migrate chart metadata annotations to `io.giantswarm.application.*` format for both the karpenter and karpenter-bundle charts.
+- Update ABS config to replace `.appVersion` in Chart.yaml with version detected by ABS.
+
+### Fixed
+
+- Use `.Chart.AppVersion` instead of `.Chart.Version` for OCIRepository tag.
+
 ## [2.1.0] - 2026-03-01
 
 ### Added
@@ -207,7 +219,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release of Karpenter-app
 
-[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/giantswarm/karpenter-app/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/giantswarm/karpenter-app/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/giantswarm/karpenter-app/compare/v1.4.0...v2.0.0
 [1.4.0]: https://github.com/giantswarm/karpenter-app/compare/v1.3.0...v1.4.0
