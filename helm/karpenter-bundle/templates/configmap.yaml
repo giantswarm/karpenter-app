@@ -8,4 +8,4 @@ metadata:
     {{- include "karpenter-bundle.labels" . | nindent 4 }}
 data:
   values: |
-  {{- (include "karpenter-bundle.karpenterValues" .) | nindent 4 }}
+  {{- (include "giantswarm.workloadValues" .) | nindent 4 }}

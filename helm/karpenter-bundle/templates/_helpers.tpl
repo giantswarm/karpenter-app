@@ -192,41 +192,69 @@ Set Giant Swarm specific values.
 Injects IAM role ARN annotation and settings based on ConfigMap lookup.
 */}}
 {{- define "giantswarm.setValues" -}}
-{{- $cmvalues := (include "karpenter-bundle.crossplaneConfigData" .) | fromYaml -}}
 {{- $_ := set .Values.serviceAccount.annotations "eks.amazonaws.com/role-arn" (include "karpenter-bundle.karpenterRoleArn" .) -}}
-
-{{- /* Set clusterName in settings if not already set */ -}}
 {{- if not .Values.settings.clusterName -}}
 {{- $_ := set .Values.settings "clusterName" .Values.clusterID -}}
 {{- end -}}
-
-{{- /* Set interruptionQueue in settings */ -}}
 {{- if not .Values.settings.interruptionQueue -}}
 {{- $_ := set .Values.settings "interruptionQueue" (printf "%s-karpenter" .Values.clusterID) -}}
-{{- end -}}
-
-{{- /* Set clusterID and baseDomain for the karpenter chart */ -}}
-{{- if not .Values.clusterID -}}
-{{- $_ := set .Values "clusterID" .Values.clusterID -}}
-{{- end -}}
-{{- if not .Values.baseDomain -}}
-{{- $_ := set .Values "baseDomain" ($cmvalues.baseDomain | default "") -}}
-{{- end -}}
-{{- if not .Values.aws.accountID -}}
-{{- $_ := set .Values.aws "accountID" $cmvalues.accountID -}}
 {{- end -}}
 {{- end -}}
 
 {{/*
-Filter values for karpenter chart - exclude bundle-specific values
+Transform flat bundle values into the nested workload chart structure.
+Routes upstream values under `upstream:` key and extras at top level.
 */}}
-{{- define "karpenter-bundle.karpenterValues" -}}
-{{- $excludeKeys := list "clusterID" "region" "workersIamRole" "ociRepositoryUrl" -}}
-{{- $values := dict -}}
-{{- range $key, $value := .Values -}}
-  {{- if not (has $key $excludeKeys) -}}
-    {{- $_ := set $values $key $value -}}
+{{- define "giantswarm.workloadValues" -}}
+{{- include "giantswarm.setValues" . -}}
+{{- $upstreamValues := dict -}}
+
+{{/* Keys that belong to the bundle chart itself (never forwarded) */}}
+{{- $bundleOnlyKeys := list "ociRepositoryUrl" "clusterID" "region" "workersIamRole" -}}
+{{/* Keys forwarded as workload extras (not under upstream:) */}}
+{{- $extrasKeys := list "podLogs" "global" -}}
+{{/* Keys with special handling */}}
+{{- $specialKeys := list "controller" "proxy" -}}
+{{- $reservedKeys := concat $bundleOnlyKeys $extrasKeys $specialKeys -}}
+
+{{/* Controller: pass through as-is */}}
+{{- $controller := deepCopy .Values.controller -}}
+
+{{/* Proxy: convert to controller.env entries */}}
+{{- $proxyEnv := list -}}
+{{- if .Values.proxy.http -}}
+  {{- $proxyEnv = append $proxyEnv (dict "name" "HTTP_PROXY" "value" .Values.proxy.http) -}}
+  {{- $proxyEnv = append $proxyEnv (dict "name" "http_proxy" "value" .Values.proxy.http) -}}
+{{- end -}}
+{{- if .Values.proxy.https -}}
+  {{- $proxyEnv = append $proxyEnv (dict "name" "HTTPS_PROXY" "value" .Values.proxy.https) -}}
+  {{- $proxyEnv = append $proxyEnv (dict "name" "https_proxy" "value" .Values.proxy.https) -}}
+{{- end -}}
+{{- if .Values.proxy.noProxy -}}
+  {{- $proxyEnv = append $proxyEnv (dict "name" "NO_PROXY" "value" .Values.proxy.noProxy) -}}
+  {{- $proxyEnv = append $proxyEnv (dict "name" "no_proxy" "value" .Values.proxy.noProxy) -}}
+{{- end -}}
+{{- if $proxyEnv -}}
+  {{- $existingEnv := $controller.env | default list -}}
+  {{- $_ := set $controller "env" (concat $existingEnv $proxyEnv) -}}
+{{- end -}}
+
+{{- $_ := set $upstreamValues "controller" $controller -}}
+
+{{/* Preserve the original chart name for selector compatibility */}}
+{{- $_ := set $upstreamValues "nameOverride" "karpenter" -}}
+
+{{/* Pass through any non-reserved value to upstream */}}
+{{- range $key, $val := .Values -}}
+  {{- if not (has $key $reservedKeys) -}}
+  {{- $_ := set $upstreamValues $key $val -}}
   {{- end -}}
 {{- end -}}
-{{- $values | toYaml -}}
+
+{{/* Assemble workload values: upstream + extras */}}
+{{- $workloadValues := dict "upstream" $upstreamValues -}}
+{{- $_ := set $workloadValues "podLogs" .Values.podLogs -}}
+{{- $_ := set $workloadValues "global" .Values.global -}}
+
+{{- $workloadValues | toYaml -}}
 {{- end -}}
