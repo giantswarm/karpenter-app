@@ -31,6 +31,7 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 application.giantswarm.io/team: {{ index .Chart.Annotations "io.giantswarm.application.team" | quote }}
 giantswarm.io/managed-by: {{ .Release.Name | quote }}
 giantswarm.io/cluster: {{ .Values.clusterID | quote }}
+cluster.x-k8s.io/cluster-name: {{ .Values.clusterID | quote }}
 helm.sh/chart: {{ include "karpenter-bundle.chart" . | quote }}
 {{- end -}}
 
