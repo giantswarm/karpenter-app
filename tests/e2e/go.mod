@@ -10,7 +10,7 @@ replace github.com/alessio/shellescape => al.essio.dev/pkg/shellescape v1.6.0
 
 require (
 	github.com/giantswarm/apptest-framework/v3 v3.2.0
-	github.com/giantswarm/clustertest/v3 v3.3.0
+	github.com/giantswarm/clustertest/v4 v4.0.1
 	github.com/onsi/ginkgo/v2 v2.28.1
 	github.com/onsi/gomega v1.39.1
 	gopkg.in/yaml.v3 v3.0.1
