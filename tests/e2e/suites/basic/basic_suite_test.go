@@ -6,17 +6,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/giantswarm/apiextensions-application/api/v1alpha1"
 	"github.com/giantswarm/apptest-framework/v3/pkg/state"
 	"github.com/giantswarm/apptest-framework/v3/pkg/suite"
-	"github.com/giantswarm/clustertest/v3/pkg/application"
 	"github.com/giantswarm/clustertest/v3/pkg/client"
 	"github.com/giantswarm/clustertest/v3/pkg/logger"
-	"github.com/giantswarm/clustertest/v3/pkg/wait"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/types"
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -27,7 +25,8 @@ const (
 
 func TestBasic(t *testing.T) {
 	var (
-		helloApp *application.Application
+		helmRelease *unstructured.Unstructured
+		ociRepoName string
 	)
 
 	suite.New().
@@ -39,56 +38,66 @@ func TestBasic(t *testing.T) {
 		WithValuesFile("./values.yaml").
 		Tests(func() {
 			It("should scale the worker node count when helloworld app is deployed", func() {
+				ctx := state.GetContext()
+				clusterName := state.GetCluster().Name
+				org := state.GetCluster().Organization
+				namespace := org.GetNamespace()
+
 				// Get the current number of worker nodes
-				wcClient, err := state.GetFramework().WC(state.GetCluster().Name)
+				wcClient, err := state.GetFramework().WC(clusterName)
 				Expect(err).To(BeNil())
 
 				nodes := corev1.NodeList{}
-				err = wcClient.List(state.GetContext(), &nodes, client.DoesNotHaveLabels{"node-role.kubernetes.io/control-plane"})
+				err = wcClient.List(ctx, &nodes, client.DoesNotHaveLabels{"node-role.kubernetes.io/control-plane"})
 				Expect(err).To(BeNil())
 
-				helloAppValues := map[string]string{
-					"ReplicaCount": fmt.Sprintf("%d", len(nodes.Items)+1),
-				}
+				replicaCount := len(nodes.Items) + 1
+				expectedReplicas := fmt.Sprintf("%d", replicaCount)
 
-				helloApp = application.New(fmt.Sprintf("%s-scale-hello-world", state.GetCluster().Name), "hello-world").
-					WithCatalog("giantswarm").
-					WithOrganization(*state.GetCluster().Organization).
-					WithVersion("latest").
-					WithClusterName(state.GetCluster().Name).
-					WithInCluster(false).
-					WithInstallNamespace("giantswarm").
-					MustWithValuesFile("./test_data/scale_helloworld_values.yaml", &application.TemplateValues{
-						ClusterName:  state.GetCluster().Name,
-						Organization: state.GetCluster().Organization.Name,
-						ExtraValues:  helloAppValues,
-					})
-
-				err = state.GetFramework().MC().DeployApp(state.GetContext(), *helloApp)
+				values, err := parseValuesFile("./test_data/scale_helloworld_values.yaml", &helmReleaseTemplateValues{
+					ClusterName: clusterName,
+					ExtraValues: map[string]string{
+						"ReplicaCount": expectedReplicas,
+					},
+				})
 				Expect(err).To(BeNil())
 
-				Eventually(func() (bool, error) {
-					managementClusterKubeClient := state.GetFramework().MC()
+				// Create OCIRepository for the hello-world chart
+				ociRepoName = fmt.Sprintf("%s-hello-world-chart", clusterName)
+				err = ensureTestOCIRepository(ctx, state.GetFramework().MC(), ociRepoName, namespace, "hello-world")
+				Expect(err).To(BeNil())
 
-					helloApplication := &v1alpha1.App{}
-					err := managementClusterKubeClient.Get(state.GetContext(), types.NamespacedName{Name: helloApp.InstallName, Namespace: helloApp.GetNamespace()}, helloApplication)
-					if err != nil {
-						return false, err
-					}
+				// Create HelmRelease targeting the workload cluster
+				helmRelease = newTestHelmRelease(
+					fmt.Sprintf("%s-scale-hello-world", clusterName),
+					namespace,
+					"scale-hello-world",
+					"giantswarm",
+					clusterName,
+					ociRepoName,
+					values,
+				)
 
-					return wait.IsAppDeployed(state.GetContext(), state.GetFramework().MC(), helloApp.InstallName, helloApp.GetNamespace())()
-				}).
+				err = state.GetFramework().MC().Create(ctx, helmRelease)
+				Expect(err).To(BeNil())
+
+				// Wait for the HelmRelease to be ready
+				Eventually(isHelmReleaseReady(ctx, state.GetFramework().MC(), types.NamespacedName{
+					Name:      helmRelease.GetName(),
+					Namespace: helmRelease.GetNamespace(),
+				})).
 					WithTimeout(5 * time.Minute).
 					WithPolling(5 * time.Second).
 					Should(BeTrue())
 
+				// Wait for the deployment to scale up worker nodes
 				Eventually(func() (bool, error) {
 					deploymentName := "scale-hello-world"
 					helloDeployment := &v1.Deployment{}
 
-					err := wcClient.Get(state.GetContext(), ctrlclient.ObjectKey{
+					err := wcClient.Get(ctx, ctrlclient.ObjectKey{
 						Name:      deploymentName,
-						Namespace: helloApp.InstallNamespace,
+						Namespace: "giantswarm",
 					},
 						helloDeployment,
 					)
@@ -97,14 +106,14 @@ func TestBasic(t *testing.T) {
 					}
 
 					replicas := fmt.Sprint(helloDeployment.Status.ReadyReplicas)
-					logger.Log("Checking for increased replicas. Expected: %s, Actual: %s", helloAppValues["ReplicaCount"], replicas)
-					if replicas == helloAppValues["ReplicaCount"] {
+					logger.Log("Checking for increased replicas. Expected: %s, Actual: %s", expectedReplicas, replicas)
+					if replicas == expectedReplicas {
 						return true, nil
 					}
 
 					// Logging out information about pod conditions
 					pods := corev1.PodList{}
-					err = wcClient.List(state.GetContext(), &pods, ctrlclient.MatchingLabels{"app.kubernetes.io/instance": deploymentName})
+					err = wcClient.List(ctx, &pods, ctrlclient.MatchingLabels{"app.kubernetes.io/instance": deploymentName})
 					if err != nil {
 						return false, err
 					}
@@ -122,7 +131,7 @@ func TestBasic(t *testing.T) {
 
 					// Logging out information about node status
 					nodes := corev1.NodeList{}
-					err = wcClient.List(state.GetContext(), &nodes, client.DoesNotHaveLabels{"node-role.kubernetes.io/control-plane"})
+					err = wcClient.List(ctx, &nodes, client.DoesNotHaveLabels{"node-role.kubernetes.io/control-plane"})
 					if err != nil {
 						return false, err
 					}
@@ -136,7 +145,11 @@ func TestBasic(t *testing.T) {
 			})
 		}).
 		AfterSuite(func() {
-			err := state.GetFramework().MC().DeleteApp(context.Background(), *helloApp)
+			ctx := context.Background()
+			err := state.GetFramework().MC().Delete(ctx, helmRelease)
+			Expect(err).ShouldNot(HaveOccurred())
+
+			err = deleteTestOCIRepository(ctx, state.GetFramework().MC(), ociRepoName, helmRelease.GetNamespace())
 			Expect(err).ShouldNot(HaveOccurred())
 		}).
 		Run(t, "Basic Test")
