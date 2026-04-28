@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add `cluster.x-k8s.io/cluster-name` label to the karpenter HelmRelease.
+- Add `iam:GetInstanceProfile` permission to Karpenter IAM role.
 - Add karpenter CRDs.
 
 ### Changed
