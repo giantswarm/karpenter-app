@@ -32,4 +32,4 @@ dependencies:
   - name: karpenter-crd
     alias: upstream-crd
     version: "1.8.1"
-    repository: "oci://public.ecr.aws/karpenter-crd"
+    repository: "oci://public.ecr.aws/karpenter"
