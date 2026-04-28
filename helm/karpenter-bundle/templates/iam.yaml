@@ -1,7 +1,5 @@
-{{- $cmvalues := (include "karpenter-bundle.crossplaneConfigData" .) | fromYaml -}}
-{{- $accountID := $cmvalues.accountID -}}
-{{- $awsPartition := $cmvalues.awsPartition | default "aws" -}}
 {{- $workersIamRole := include "karpenter-bundle.workersIamRole" . -}}
+{{- $sqsQueueArn := include "karpenter-bundle.sqsQueueArn" . -}}
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: Role
 metadata:
@@ -63,7 +61,7 @@ spec:
                   "sqs:GetQueueUrl",
                   "sqs:ReceiveMessage"
                 ],
-                "Resource": "arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter"
+                "Resource": "{{ $sqsQueueArn }}"
               },
               {
                 "Effect": "Allow",

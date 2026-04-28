@@ -1,6 +1,4 @@
-{{- $cmvalues := (include "karpenter-bundle.crossplaneConfigData" .) | fromYaml -}}
-{{- $accountID := $cmvalues.accountID -}}
-{{- $awsPartition := $cmvalues.awsPartition | default "aws" -}}
+{{- $sqsQueueArn := include "karpenter-bundle.sqsQueueArn" . -}}
 apiVersion: sqs.aws.upbound.io/v1beta1
 kind: Queue
 metadata:
@@ -47,7 +45,7 @@ spec:
               ]
             },
             "Action": "sqs:SendMessage",
-            "Resource": "arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter"
+            "Resource": "{{ $sqsQueueArn }}"
           }
         ]
       }
@@ -177,7 +175,7 @@ spec:
   providerConfigRef:
     name: {{ .Values.clusterID }}
   forProvider:
-    arn: arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter
+    arn: {{ $sqsQueueArn }}
     region: {{ .Values.region }}
     eventBusName: default
     targetId: karpenter
@@ -197,7 +195,7 @@ spec:
   providerConfigRef:
     name: {{ .Values.clusterID }}
   forProvider:
-    arn: arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter
+    arn: {{ $sqsQueueArn }}
     region: {{ .Values.region }}
     eventBusName: default
     targetId: karpenter
@@ -217,7 +215,7 @@ spec:
   providerConfigRef:
     name: {{ .Values.clusterID }}
   forProvider:
-    arn: arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter
+    arn: {{ $sqsQueueArn }}
     region: {{ .Values.region }}
     eventBusName: default
     targetId: karpenter
@@ -237,7 +235,7 @@ spec:
   providerConfigRef:
     name: {{ .Values.clusterID }}
   forProvider:
-    arn: arn:{{ $awsPartition }}:sqs:{{ .Values.region }}:{{ $accountID }}:{{ .Values.clusterID }}-karpenter
+    arn: {{ $sqsQueueArn }}
     region: {{ .Values.region }}
     eventBusName: default
     targetId: karpenter
