@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `cluster.x-k8s.io/cluster-name` label to the karpenter HelmRelease.
 - Add `iam:GetInstanceProfile` permission to Karpenter IAM role.
 - Add karpenter CRDs.
+- Set `helm.sh/resource-policy: keep` on the karpenter CRDs so they survive HelmRelease uninstall and prevent cascade-deleting `NodePool`/`NodeClaim`/`EC2NodeClass` resources.
 
 ### Changed
 
