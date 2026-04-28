@@ -9,6 +9,13 @@ upstream:
       resources: ["nodes/finalizers"]
       verbs: ["update"]
 
+upstream-crd:
+  additionalAnnotations:
+    # Prevent Helm from cascade-deleting NodePools/NodeClaims/EC2NodeClasses
+    # if the HelmRelease is ever uninstalled. The pre-2.3.0 forked CRDs had
+    # this annotation; the upstream karpenter-crd chart does not set it.
+    helm.sh/resource-policy: keep
+
 # ─── EXTRAS ──────────────────────────────────────────────────────────────────
 podLogs:
   enabled: false
