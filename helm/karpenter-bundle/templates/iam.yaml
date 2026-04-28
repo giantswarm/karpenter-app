@@ -51,7 +51,8 @@ spec:
                   "ec2:DescribeSubnets",
                   "pricing:GetProducts",
                   "ssm:GetParameter",
-                  "iam:ListInstanceProfiles"
+                  "iam:ListInstanceProfiles",
+                  "iam:GetInstanceProfile"
                 ]
               },
               {
