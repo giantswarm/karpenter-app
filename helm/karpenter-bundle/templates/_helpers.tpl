@@ -36,74 +36,60 @@ helm.sh/chart: {{ include "karpenter-bundle.chart" . | quote }}
 {{- end -}}
 
 {{/*
+Resolve clusterID: use .Values.clusterID if set, otherwise derive from
+the release name by stripping known chart name suffixes.
+*/}}
+{{- define "karpenter-bundle.clusterID" -}}
+{{- if .Values.clusterID -}}
+  {{- .Values.clusterID -}}
+{{- else -}}
+  {{- $name := .Release.Name -}}
+  {{- range $suffix := list (printf "-%s" $.Chart.Name) "-karpenter-bundle" -}}
+    {{- $name = trimSuffix $suffix $name -}}
+  {{- end -}}
+  {{- if eq $name .Release.Name -}}
+    {{- fail "clusterID not set and cannot derive cluster name from release name" -}}
+  {{- end -}}
+  {{- $name -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Crossplane config ConfigMap name
 */}}
 {{- define "karpenter-bundle.crossplaneConfigName" -}}
-{{- printf "%s-crossplane-config" .Values.clusterID -}}
+{{- printf "%s-crossplane-config" (include "karpenter-bundle.clusterID" .) -}}
 {{- end -}}
 
 {{/*
 Karpenter config ConfigMap name
 */}}
 {{- define "karpenter-bundle.configMapName" -}}
-{{- printf "%s-karpenter-app-config" .Values.clusterID -}}
-{{- end -}}
-
-{{/*
-Get list of all provided OIDC domains from ConfigMap lookup
-Returns a JSON array of OIDC domains
-*/}}
-{{- define "karpenter-bundle.oidcDomains" -}}
-{{- $configMapName := include "karpenter-bundle.crossplaneConfigName" . -}}
-{{- $configMap := lookup "v1" "ConfigMap" .Release.Namespace $configMapName -}}
-{{- $oidcDomains := list -}}
-{{- if $configMap -}}
-  {{- $oidcDomain := index $configMap.data "oidcDomain" | default "" -}}
-  {{- if $oidcDomain -}}
-    {{- $oidcDomains = append $oidcDomains $oidcDomain -}}
-  {{- end -}}
-  {{- $oidcDomainsStr := index $configMap.data "oidcDomains" | default "" -}}
-  {{- if $oidcDomainsStr -}}
-    {{- $additionalDomains := $oidcDomainsStr | fromJson -}}
-    {{- $oidcDomains = concat $oidcDomains $additionalDomains -}}
-  {{- end -}}
-{{- end -}}
-{{- compact $oidcDomains | uniq | toJson -}}
+{{- printf "%s-karpenter-app-config" (include "karpenter-bundle.clusterID" .) -}}
 {{- end -}}
 
 {{/*
 Get accountID from ConfigMap lookup
 */}}
 {{- define "karpenter-bundle.accountID" -}}
-{{- $configMapName := include "karpenter-bundle.crossplaneConfigName" . -}}
-{{- $configMap := lookup "v1" "ConfigMap" .Release.Namespace $configMapName -}}
-{{- if $configMap -}}
-{{- index $configMap.data "accountID" | default "" -}}
-{{- end -}}
+{{- $cmvalues := (include "karpenter-bundle.crossplaneConfigData" .) | fromYaml -}}
+{{- index $cmvalues "accountID" | default "" -}}
 {{- end -}}
 
 {{/*
 Get awsPartition from ConfigMap lookup
 */}}
 {{- define "karpenter-bundle.awsPartition" -}}
-{{- $configMapName := include "karpenter-bundle.crossplaneConfigName" . -}}
-{{- $configMap := lookup "v1" "ConfigMap" .Release.Namespace $configMapName -}}
-{{- if $configMap -}}
-{{- index $configMap.data "awsPartition" | default "aws" -}}
-{{- else -}}
-aws
-{{- end -}}
+{{- $cmvalues := (include "karpenter-bundle.crossplaneConfigData" .) | fromYaml -}}
+{{- index $cmvalues "awsPartition" | default "aws" -}}
 {{- end -}}
 
 {{/*
 Get base domain from ConfigMap lookup
 */}}
 {{- define "karpenter-bundle.baseDomain" -}}
-{{- $configMapName := include "karpenter-bundle.crossplaneConfigName" . -}}
-{{- $configMap := lookup "v1" "ConfigMap" .Release.Namespace $configMapName -}}
-{{- if $configMap -}}
-{{- index $configMap.data "baseDomain" | default "" -}}
-{{- end -}}
+{{- $cmvalues := (include "karpenter-bundle.crossplaneConfigData" .) | fromYaml -}}
+{{- index $cmvalues "baseDomain" | default "" -}}
 {{- end -}}
 
 {{/*
@@ -141,27 +127,13 @@ SQS Queue ARN
 Fetch crossplane config ConfigMap data
 */}}
 {{- define "karpenter-bundle.crossplaneConfigData" -}}
-{{- $configMapName := include "karpenter-bundle.crossplaneConfigName" . -}}
-{{- $configmap := (lookup "v1" "ConfigMap" .Release.Namespace $configMapName) -}}
+{{- $cmname := (include "karpenter-bundle.crossplaneConfigName" .) -}}
+{{- $configmap := (lookup "v1" "ConfigMap" .Release.Namespace $cmname) -}}
 {{- $cmvalues := dict -}}
 {{- if and $configmap $configmap.data $configmap.data.values -}}
   {{- $cmvalues = fromYaml $configmap.data.values -}}
-{{- else if $configmap -}}
-  {{- /* ConfigMap exists but uses flat key structure instead of values key */ -}}
-  {{- $cmvalues = dict "accountID" (index $configmap.data "accountID" | default "") "awsPartition" (index $configmap.data "awsPartition" | default "aws") "baseDomain" (index $configmap.data "baseDomain" | default "") -}}
-  {{- $oidcDomain := index $configmap.data "oidcDomain" | default "" -}}
-  {{- $oidcDomains := list -}}
-  {{- if $oidcDomain -}}
-    {{- $oidcDomains = append $oidcDomains $oidcDomain -}}
-  {{- end -}}
-  {{- $oidcDomainsStr := index $configmap.data "oidcDomains" | default "" -}}
-  {{- if $oidcDomainsStr -}}
-    {{- $additionalDomains := $oidcDomainsStr | fromJson -}}
-    {{- $oidcDomains = concat $oidcDomains $additionalDomains -}}
-  {{- end -}}
-  {{- $_ := set $cmvalues "oidcDomains" $oidcDomains -}}
 {{- else -}}
-  {{- fail (printf "Crossplane config ConfigMap %s not found in namespace %s" $configMapName .Release.Namespace) -}}
+  {{- fail (printf "Crossplane config ConfigMap %s not found in namespace %s or has no data" $cmname .Release.Namespace) -}}
 {{- end -}}
 {{- $cmvalues | toYaml -}}
 {{- end -}}
@@ -171,8 +143,7 @@ Get trust policy statements for all provided OIDC domains
 */}}
 {{- define "karpenter-bundle.trustPolicyStatements" -}}
 {{- $cmvalues := (include "karpenter-bundle.crossplaneConfigData" .) | fromYaml -}}
-{{- $oidcDomains := $cmvalues.oidcDomains | default list -}}
-{{- range $index, $oidcDomain := $oidcDomains -}}
+{{- range $index, $oidcDomain := $cmvalues.oidcDomains -}}
 {{- if not (eq $index 0) }}, {{ end }}{
   "Effect": "Allow",
   "Principal": {
