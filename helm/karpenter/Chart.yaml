@@ -27,7 +27,7 @@ maintainers:
 dependencies:
   - name: karpenter
     alias: upstream
-    version: "1.8.1"
+    version: "1.12.0"
     repository: "oci://public.ecr.aws/karpenter"
   - name: karpenter-crd
     alias: upstream-crd
