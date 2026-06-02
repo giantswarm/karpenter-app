@@ -20,7 +20,3 @@ upstream-crd:
 podLogs:
   enabled: false
   tenant: ""
-
-global:
-  podSecurityStandards:
-    enforced: false

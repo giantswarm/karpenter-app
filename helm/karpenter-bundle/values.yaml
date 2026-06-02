@@ -43,7 +43,3 @@ proxy:
 podLogs:
   enabled: false
   tenant: ""
-
-global:
-  podSecurityStandards:
-    enforced: false
