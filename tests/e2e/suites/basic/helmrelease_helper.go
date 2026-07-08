@@ -29,7 +29,7 @@ var helmReleaseGVK = schema.GroupVersionKind{
 func ensureTestOCIRepository(ctx context.Context, c cr.Client, name, namespace, chartName string) error {
 	repo := &unstructured.Unstructured{
 		Object: map[string]interface{}{
-			"apiVersion": "source.toolkit.fluxcd.io/v1beta2",
+			"apiVersion": "source.toolkit.fluxcd.io/v1",
 			"kind":       "OCIRepository",
 			"metadata": map[string]interface{}{
 				"name":      name,
@@ -55,7 +55,7 @@ func ensureTestOCIRepository(ctx context.Context, c cr.Client, name, namespace, 
 func deleteTestOCIRepository(ctx context.Context, c cr.Client, name, namespace string) error {
 	repo := &unstructured.Unstructured{
 		Object: map[string]interface{}{
-			"apiVersion": "source.toolkit.fluxcd.io/v1beta2",
+			"apiVersion": "source.toolkit.fluxcd.io/v1",
 			"kind":       "OCIRepository",
 			"metadata": map[string]interface{}{
 				"name":      name,

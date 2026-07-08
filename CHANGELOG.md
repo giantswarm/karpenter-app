@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Bump OCIRepository to v1.
+
 ### Removed
 
 - Removed `global.podSecurityStandards.enforced` helm value. The Kyverno `PolicyException` in `pss-exceptions.yaml` is now rendered unconditionally.
