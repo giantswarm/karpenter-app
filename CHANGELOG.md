@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `iam:CreateServiceLinkedRole` permission to the Karpenter IAM role, scoped to the `AWSServiceRoleForEC2Spot` service-linked role, so Karpenter can create it when launching spot instances in accounts where it does not exist yet.
+
 ### Changed
 
 - Bump OCIRepository to v1.
