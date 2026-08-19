@@ -3,13 +3,27 @@
     "type": "object",
     "additionalProperties": true,
     "properties": {
-        "ociRepositoryUrl": {
-            "type": "string"
-        },
         "clusterID": {
             "type": "string"
         },
+        "helmRelease": {
+            "type": "object",
+            "properties": {
+                "dependsOn": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "ociRepositoryUrl": {
+            "type": "string"
+        },
         "region": {
+            "type": "string"
+        },
+        "workersIamRole": {
             "type": "string"
         }
     }

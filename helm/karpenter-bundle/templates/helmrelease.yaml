@@ -34,6 +34,13 @@ spec:
     kind: OCIRepository
     name: {{ .Values.clusterID }}-karpenter
     namespace: {{ .Release.Namespace }}
+  {{- if .Values.helmRelease.dependsOn }}
+  dependsOn:
+  {{- range .Values.helmRelease.dependsOn }}
+  - name: {{ include "karpenter-bundle.clusterID" $ }}-{{ . }}
+    namespace: {{ $.Release.Namespace }}
+  {{- end }}
+  {{- end }}
   releaseName: karpenter
   targetNamespace: karpenter
   storageNamespace: karpenter
