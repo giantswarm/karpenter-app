@@ -9,7 +9,7 @@ Here we define the `karpenter-bundle` and `karpenter` charts with their template
 
 | Term | Where it lives | What it does |
 |------|---------------|--------------|
-| **BUNDLE-ONLY** | Management cluster only | Never forwarded to workload chart. Examples: `clusterID`, `region`, `ociRepositoryUrl`, `workersIamRole` |
+| **BUNDLE-ONLY** | Management cluster only | Never forwarded to workload chart. Examples: `clusterID`, `region`, `workersIamRole`, `ociRepositoryUrl`, `helmRelease` |
 | **UPSTREAM** | Workload cluster, under `upstream:` key | Routed to the unmodified upstream Karpenter subchart. Controls the actual application: images, controller settings, service accounts, etc. |
 | **EXTRAS** | Workload cluster, at top level (not under `upstream:`) | Consumed by GS extras templates: `podLogs`, `global.podSecurityStandards` |
 
@@ -61,7 +61,7 @@ Management Cluster (Bundle)                 Workload Cluster (Karpenter)
 3. `giantswarm.combineImage` merges split `controller.image.registry` + `controller.image.repository` into a single `controller.image.repository` path
 4. Proxy settings (`proxy.http`, `proxy.https`, `proxy.noProxy`) are converted to `controller.env` entries (HTTP_PROXY, HTTPS_PROXY, NO_PROXY)
 5. `giantswarm.workloadValues` assembles the final structure:
-   - Bundle-only keys (`clusterID`, `region`, `workersIamRole`, `ociRepositoryUrl`) are excluded
+   - Bundle-only keys (`clusterID`, `region`, `workersIamRole`, `ociRepositoryUrl`, `helmRelease`) are excluded
    - Upstream values are nested under `upstream:` key
    - Extras (`podLogs`, `global`) are placed at top level
 6. Result is stored in a ConfigMap, consumed by the Flux HelmRelease via `valuesFrom`
