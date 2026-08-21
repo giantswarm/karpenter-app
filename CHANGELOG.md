@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Run the E2E test suites automatically on release PRs by adding `.github/release-pr-body.md`.
 - Bump OCIRepository to v1.
-- Chart: Move PolicyException to `kube-system`.
+- Chart: Move PolicyException to `kube-system` to avoid depending on creation of the `policy-exceptions` namespace.
 
 ### Removed
 
