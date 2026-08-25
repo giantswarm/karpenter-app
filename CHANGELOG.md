@@ -11,9 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add `iam:CreateServiceLinkedRole` permission to the Karpenter IAM role, scoped to the `AWSServiceRoleForEC2Spot` service-linked role, so Karpenter can create such role when launching spot instances in accounts where it does not exist yet.
 
+## [2.4.1] - 2026-08-21
+
+### Added
+
+- HelmRelease: Add dependencies.
+
 ### Changed
 
+- Run the E2E test suites automatically on release PRs by adding `.github/release-pr-body.md`.
 - Bump OCIRepository to v1.
+- Chart: Move PolicyException to `kube-system` to avoid depending on creation of the `policy-exceptions` namespace.
 
 ### Removed
 
@@ -247,7 +255,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release of Karpenter-app
 
-[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v2.4.0...HEAD
+[Unreleased]: https://github.com/giantswarm/karpenter-app/compare/v2.4.1...HEAD
+[2.4.1]: https://github.com/giantswarm/karpenter-app/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/giantswarm/karpenter-app/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/giantswarm/karpenter-app/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/giantswarm/karpenter-app/compare/v2.1.0...v2.2.0

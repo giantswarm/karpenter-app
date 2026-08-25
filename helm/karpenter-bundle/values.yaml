@@ -1,9 +1,15 @@
 # ─── BUNDLE-ONLY ─────────────────────────────────────────────────────────────
 # These values are used by the bundle chart only and never forwarded to the workload chart.
-ociRepositoryUrl: oci://gsoci.azurecr.io/charts/giantswarm/karpenter
 clusterID: ""
 region: ""
 workersIamRole: ""
+ociRepositoryUrl: oci://gsoci.azurecr.io/charts/giantswarm/karpenter
+helmRelease:
+  dependsOn:
+  - alloy-podlogs-crds
+  - cilium
+  - cloud-provider-aws
+  - kyverno-crds
 
 # ─── UPSTREAM ────────────────────────────────────────────────────────────────
 # These values are transformed and routed under the `upstream:` key to the workload chart.
