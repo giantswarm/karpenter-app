@@ -10,6 +10,10 @@ helmRelease:
   - cilium
   - cloud-provider-aws
   - kyverno-crds
+nodeIamRole:
+  # EKS clusters need an IAM role and instance profile for the nodes karpenter launches. On CAPA
+  # clusters the worker instance profile comes from the cluster chart instead.
+  create: false
 
 # ─── UPSTREAM ────────────────────────────────────────────────────────────────
 # These values are transformed and routed under the `upstream:` key to the workload chart.

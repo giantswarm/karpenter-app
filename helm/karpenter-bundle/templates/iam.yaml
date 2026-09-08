@@ -1,3 +1,4 @@
+{{- $awsPartition := include "karpenter-bundle.awsPartition" . -}}
 {{- $workersIamRole := include "karpenter-bundle.workersIamRole" . -}}
 {{- $sqsQueueArn := include "karpenter-bundle.sqsQueueArn" . -}}
 apiVersion: iam.aws.upbound.io/v1beta1
@@ -47,6 +48,7 @@ spec:
                   "ec2:DescribeSecurityGroups",
                   "ec2:DescribeSpotPriceHistory",
                   "ec2:DescribeSubnets",
+                  "eks:DescribeCluster",
                   "pricing:GetProducts",
                   "ssm:GetParameter",
                   "iam:ListInstanceProfiles",
@@ -112,3 +114,74 @@ spec:
               }
             ]
           }
+{{- if .Values.nodeIamRole.create }}
+{{- $ec2ServicePrincipal := eq $awsPartition "aws-cn" | ternary "ec2.amazonaws.com.cn" "ec2.amazonaws.com" }}
+---
+{{/* Named to match the `iam:PassRole` wildcard the karpenter controller role is scoped to */}}
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: nodes-karpenter-{{ .Values.clusterID }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    tags:
+      giantswarm.io/cluster: {{ .Values.clusterID }}
+      giantswarm.io/managed-by: {{ .Release.Name | quote }}
+      sigs.k8s.io/cluster-api-provider-aws/cluster/{{ .Values.clusterID }}: owned
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "{{ $ec2ServicePrincipal }}"
+            },
+            "Action": "sts:AssumeRole"
+          }
+        ]
+      }
+{{- /* The same policies CAPA attaches to EKS managed node group roles. AmazonEKS_CNI_Policy is
+       required because Cilium runs in ENI IPAM mode without IRSA and manages ENIs through the
+       node instance role. */}}
+{{- range $policy := list "AmazonEKSWorkerNodePolicy" "AmazonEKS_CNI_Policy" "AmazonEC2ContainerRegistryReadOnly" }}
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: nodes-karpenter-{{ $.Values.clusterID }}-{{ $policy | lower | replace "_" "-" }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" $ | nindent 4 }}
+spec:
+  providerConfigRef:
+    name: {{ $.Values.clusterID }}
+  forProvider:
+    policyArn: arn:{{ $awsPartition }}:iam::aws:policy/{{ $policy }}
+    roleRef:
+      name: nodes-karpenter-{{ $.Values.clusterID }}
+{{- end }}
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: InstanceProfile
+metadata:
+  name: nodes-karpenter-{{ .Values.clusterID }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "karpenter-bundle.labels" . | nindent 4 }}
+spec:
+  providerConfigRef:
+    name: {{ .Values.clusterID }}
+  forProvider:
+    tags:
+      giantswarm.io/cluster: {{ .Values.clusterID }}
+      giantswarm.io/managed-by: {{ .Release.Name | quote }}
+      sigs.k8s.io/cluster-api-provider-aws/cluster/{{ .Values.clusterID }}: owned
+    roleRef:
+      name: nodes-karpenter-{{ .Values.clusterID }}
+{{- end }}

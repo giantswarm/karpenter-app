@@ -182,7 +182,7 @@ Routes upstream values under `upstream:` key and extras at top level.
 {{- $upstreamValues := dict -}}
 
 {{/* Keys that belong to the bundle chart itself (never forwarded) */}}
-{{- $bundleOnlyKeys := list "clusterID" "region" "workersIamRole" "ociRepositoryUrl" "helmRelease" -}}
+{{- $bundleOnlyKeys := list "clusterID" "region" "workersIamRole" "ociRepositoryUrl" "helmRelease" "nodeIamRole" -}}
 {{/* Keys forwarded as workload extras (not under upstream:) */}}
 {{- $extrasKeys := list "podLogs" -}}
 {{/* Keys with special handling */}}
