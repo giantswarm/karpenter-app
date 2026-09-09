@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bundle: Turn `helmRelease.dependsOn` into a map of dependency name to a Go template deciding whether to keep it, so a single dependency can be disabled without restating the whole list. Values merge, lists get replaced, so cluster charts can now drop `cloud-provider-aws` on EKS while still receiving dependencies added here later. The `alloy-podlogs-crds` dependency follows `podLogs.enabled`, since nothing needs the CRD otherwise.
 
+### Fixed
+
+- Strip a trailing `_` from the `helm.sh/chart` label value in both charts. CI builds replace the chart version with a git-derived version whose `+<sha>` build metadata got truncated mid-way, leaving an underscore that Kubernetes rejects as the last character of a label value.
+
 ## [2.4.1] - 2026-08-21
 
 ### Added
