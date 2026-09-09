@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bundle: Evaluate `helmRelease.dependsOn` entries as Go templates and skip the ones resulting in an empty string. This drops the `alloy-podlogs-crds` dependency when `podLogs.enabled` is `false`, since nothing then needs the CRD.
+- Bundle: Turn `helmRelease.dependsOn` into a map of dependency name to a Go template deciding whether to keep it, so a single dependency can be disabled without restating the whole list. Values merge, lists get replaced, so cluster charts can now drop `cloud-provider-aws` on EKS while still receiving dependencies added here later. The `alloy-podlogs-crds` dependency follows `podLogs.enabled`, since nothing needs the CRD otherwise.
 
 ## [2.4.1] - 2026-08-21
 

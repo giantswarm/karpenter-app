@@ -10,10 +10,13 @@
             "type": "object",
             "properties": {
                 "dependsOn": {
-                    "type": "array",
-                    "description": "HelmReleases the karpenter HelmRelease depends on, named without the cluster ID prefix. Each entry is evaluated as a Go template, so a dependency can be made conditional; entries resulting in an empty string are skipped.",
-                    "items": {
-                        "type": "string"
+                    "type": "object",
+                    "description": "HelmReleases the karpenter HelmRelease depends on, keyed by name without the cluster ID prefix. Each value is evaluated as a Go template, so a dependency can be made conditional; only values resulting in `true` are kept.",
+                    "additionalProperties": {
+                        "type": [
+                            "boolean",
+                            "string"
+                        ]
                     }
                 }
             }

@@ -34,11 +34,13 @@ spec:
     kind: OCIRepository
     name: {{ .Values.clusterID }}-karpenter
     namespace: {{ .Release.Namespace }}
-  {{- /* Entries are Go templates so that a dependency can be made conditional. Ones evaluating to an empty string are dropped. */}}
+  {{- /* Values are Go templates so that a dependency can be made conditional. Ones not resulting in `true` are skipped. */}}
   {{- $dependsOn := list }}
-  {{- range .Values.helmRelease.dependsOn }}
-  {{- $dependency := tpl . $ | trim }}
-  {{- if $dependency }}
+  {{- range $dependency, $enabled := .Values.helmRelease.dependsOn }}
+  {{- if kindIs "string" $enabled }}
+  {{- $enabled = eq (tpl $enabled $ | trim) "true" }}
+  {{- end }}
+  {{- if $enabled }}
   {{- $dependsOn = append $dependsOn $dependency }}
   {{- end }}
   {{- end }}

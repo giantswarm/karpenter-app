@@ -5,12 +5,12 @@ region: ""
 workersIamRole: ""
 ociRepositoryUrl: oci://gsoci.azurecr.io/charts/giantswarm/karpenter
 helmRelease:
-  # Each entry is evaluated as a Go template. Entries resulting in an empty string are skipped.
+  # Each value is evaluated as a Go template. Dependencies whose value does not result in `true` are skipped.
   dependsOn:
-  - '{{ $.Values.podLogs.enabled | ternary "alloy-podlogs-crds" "" }}'
-  - cilium
-  - cloud-provider-aws
-  - kyverno-crds
+    alloy-podlogs-crds: '{{ $.Values.podLogs.enabled }}'
+    cilium: true
+    cloud-provider-aws: true
+    kyverno-crds: true
 nodeIamRole:
   # EKS clusters need an IAM role and instance profile for the nodes karpenter launches. On CAPA
   # clusters the worker instance profile comes from the cluster chart instead.
