@@ -34,9 +34,17 @@ spec:
     kind: OCIRepository
     name: {{ .Values.clusterID }}-karpenter
     namespace: {{ .Release.Namespace }}
-  {{- if .Values.helmRelease.dependsOn }}
-  dependsOn:
+  {{- /* Entries are Go templates so that a dependency can be made conditional. Ones evaluating to an empty string are dropped. */}}
+  {{- $dependsOn := list }}
   {{- range .Values.helmRelease.dependsOn }}
+  {{- $dependency := tpl . $ | trim }}
+  {{- if $dependency }}
+  {{- $dependsOn = append $dependsOn $dependency }}
+  {{- end }}
+  {{- end }}
+  {{- if $dependsOn }}
+  dependsOn:
+  {{- range $dependsOn }}
   - name: {{ include "karpenter-bundle.clusterID" $ }}-{{ . }}
     namespace: {{ $.Release.Namespace }}
   {{- end }}

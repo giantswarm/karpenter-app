@@ -5,8 +5,9 @@ region: ""
 workersIamRole: ""
 ociRepositoryUrl: oci://gsoci.azurecr.io/charts/giantswarm/karpenter
 helmRelease:
+  # Each entry is evaluated as a Go template. Entries resulting in an empty string are skipped.
   dependsOn:
-  - alloy-podlogs-crds
+  - '{{ $.Values.podLogs.enabled | ternary "alloy-podlogs-crds" "" }}'
   - cilium
   - cloud-provider-aws
   - kyverno-crds
