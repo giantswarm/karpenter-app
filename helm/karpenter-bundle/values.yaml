@@ -10,7 +10,7 @@ helmRelease:
     alloy-podlogs-crds: '{{ $.Values.podLogs.enabled }}'
     cilium: true
     cloud-provider-aws: true
-    kyverno-crds: true
+    kyverno-crds: '{{ $.Values.kyverno.enabled }}'
 nodeIamRole:
   # EKS clusters need an IAM role and instance profile for the nodes karpenter launches. On CAPA
   # clusters the worker instance profile comes from the cluster chart instead.
@@ -51,6 +51,9 @@ proxy:
 
 # ─── EXTRAS ──────────────────────────────────────────────────────────────────
 # These values are forwarded at top level (not under upstream:) to the workload chart.
+kyverno:
+  # Whether Kyverno is installed. Without it, both the `PolicyException` and the `kyverno-crds` dependency are skipped.
+  enabled: true
 podLogs:
   enabled: false
   tenant: ""

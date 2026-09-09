@@ -21,6 +21,15 @@
                 }
             }
         },
+        "kyverno": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Whether Kyverno is installed in the workload cluster. When disabled, the karpenter HelmRelease does not wait for the `kyverno-crds` dependency and the chart renders no `PolicyException`, since both need Kyverno's CRDs."
+                }
+            }
+        },
         "nodeIamRole": {
             "type": "object",
             "properties": {
