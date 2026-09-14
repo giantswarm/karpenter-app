@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bundle: Grant the karpenter controller role `eks:DescribeCluster`, so karpenter can discover the cluster endpoint instead of being given one. On EKS the endpoint is not known when the cluster chart is first rendered.
 - Add `kyverno.enabled` (default `true`). Disabling it drops the karpenter HelmRelease's `kyverno-crds` dependency and skips the `PolicyException`, which on a cluster without Kyverno would otherwise wait for a HelmRelease that never becomes ready and fail on a missing CRD.
-- Bundle: Create an IAM role and instance profile for karpenter-launched nodes when `nodeIamRole.create` is set. EKS clusters have no worker instance profile to reuse, and the role is named `nodes-karpenter-<clusterID>` so it already matches the `iam:PassRole` wildcard the karpenter controller role is scoped to.
 
 ### Changed
 

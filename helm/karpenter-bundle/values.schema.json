@@ -30,15 +30,6 @@
                 }
             }
         },
-        "nodeIamRole": {
-            "type": "object",
-            "properties": {
-                "create": {
-                    "type": "boolean",
-                    "description": "Create the IAM role and instance profile for karpenter-launched nodes. Required on EKS clusters, where no worker instance profile exists."
-                }
-            }
-        },
         "ociRepositoryUrl": {
             "type": "string"
         },
