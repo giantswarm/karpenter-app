@@ -17,6 +17,9 @@ upstream-crd:
     helm.sh/resource-policy: keep
 
 # ─── EXTRAS ──────────────────────────────────────────────────────────────────
+kyverno:
+  # The `PolicyException` needs Kyverno's CRDs, which only exist if Kyverno is installed
+  enabled: true
 podLogs:
   enabled: false
   tenant: ""

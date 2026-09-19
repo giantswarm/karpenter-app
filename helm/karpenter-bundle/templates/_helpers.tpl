@@ -10,7 +10,7 @@ Expand the name of the chart.
 Create chart name and version as used by the chart label.
 */}}
 {{- define "karpenter-bundle.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" | trimSuffix "_" -}}
 {{- end -}}
 
 {{/*
@@ -184,7 +184,7 @@ Routes upstream values under `upstream:` key and extras at top level.
 {{/* Keys that belong to the bundle chart itself (never forwarded) */}}
 {{- $bundleOnlyKeys := list "clusterID" "region" "workersIamRole" "ociRepositoryUrl" "helmRelease" -}}
 {{/* Keys forwarded as workload extras (not under upstream:) */}}
-{{- $extrasKeys := list "podLogs" -}}
+{{- $extrasKeys := list "kyverno" "podLogs" -}}
 {{/* Keys with special handling */}}
 {{- $specialKeys := list "controller" "proxy" -}}
 {{- $reservedKeys := concat $bundleOnlyKeys $extrasKeys $specialKeys -}}
@@ -225,6 +225,7 @@ Routes upstream values under `upstream:` key and extras at top level.
 
 {{/* Assemble workload values: upstream + extras */}}
 {{- $workloadValues := dict "upstream" $upstreamValues -}}
+{{- $_ := set $workloadValues "kyverno" .Values.kyverno -}}
 {{- $_ := set $workloadValues "podLogs" .Values.podLogs -}}
 
 {{- $workloadValues | toYaml -}}
