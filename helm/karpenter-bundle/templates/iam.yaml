@@ -1,5 +1,6 @@
 {{- $workersIamRole := include "karpenter-bundle.workersIamRole" . -}}
 {{- $sqsQueueArn := include "karpenter-bundle.sqsQueueArn" . -}}
+{{- $spotServiceLinkedRoleArn := include "karpenter-bundle.spotServiceLinkedRoleArn" . -}}
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: Role
 metadata:
@@ -69,6 +70,18 @@ spec:
                   "iam:PassRole"
                 ],
                 "Resource": "{{ $workersIamRole }}"
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "iam:CreateServiceLinkedRole"
+                ],
+                "Resource": "{{ $spotServiceLinkedRoleArn }}",
+                "Condition": {
+                  "StringEquals": {
+                    "iam:AWSServiceName": "spot.amazonaws.com"
+                  }
+                }
               }
             ]
           }

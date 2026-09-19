@@ -115,6 +115,15 @@ Workers IAM role ARN
 {{- end -}}
 
 {{/*
+EC2 Spot service-linked role ARN
+*/}}
+{{- define "karpenter-bundle.spotServiceLinkedRoleArn" -}}
+{{- $accountID := include "karpenter-bundle.accountID" . -}}
+{{- $awsPartition := include "karpenter-bundle.awsPartition" . -}}
+{{- printf "arn:%s:iam::%s:role/aws-service-role/spot.amazonaws.com/AWSServiceRoleForEC2Spot" $awsPartition $accountID -}}
+{{- end -}}
+
+{{/*
 SQS Queue ARN
 */}}
 {{- define "karpenter-bundle.sqsQueueArn" -}}
