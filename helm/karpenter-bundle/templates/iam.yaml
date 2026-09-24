@@ -48,6 +48,7 @@ spec:
                   "ec2:DescribeSecurityGroups",
                   "ec2:DescribeSpotPriceHistory",
                   "ec2:DescribeSubnets",
+                  "eks:DescribeCluster",
                   "pricing:GetProducts",
                   "ssm:GetParameter",
                   "iam:ListInstanceProfiles",

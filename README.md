@@ -11,7 +11,7 @@ Here we define the `karpenter-bundle` and `karpenter` charts with their template
 |------|---------------|--------------|
 | **BUNDLE-ONLY** | Management cluster only | Never forwarded to workload chart. Examples: `clusterID`, `region`, `workersIamRole`, `ociRepositoryUrl`, `helmRelease` |
 | **UPSTREAM** | Workload cluster, under `upstream:` key | Routed to the unmodified upstream Karpenter subchart. Controls the actual application: images, controller settings, service accounts, etc. |
-| **EXTRAS** | Workload cluster, at top level (not under `upstream:`) | Consumed by GS extras templates: `podLogs`, `global.podSecurityStandards` |
+| **EXTRAS** | Workload cluster, at top level (not under `upstream:`) | Consumed by GS extras templates: `kyverno`, `podLogs` |
 
 ## Architecture
 
@@ -97,7 +97,7 @@ spec:
 - `helm dependency update helm/karpenter/` — fetch upstream chart
 - `helm template helm/karpenter/ -f helm/karpenter/ci/ci-values.yaml` — render workload chart
 - `helm lint helm/karpenter/`
-- `helm lint helm/karpenter-bundle/ -f helm/karpenter-bundle/ci/values.yaml`
+- `helm lint helm/karpenter-bundle/ -f helm/karpenter-bundle/ci/ci-values.yaml`
 
 ## Credit
 
