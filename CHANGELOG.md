@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Strip trailing `_` from the `helm.sh/chart` label to support dev versions
+- Strip `-`, `_`, and `.` from the `helm.sh/chart` label to support dev versions
 
 ## [2.4.1] - 2026-08-21
 
