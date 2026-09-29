@@ -11,7 +11,7 @@ replace github.com/alessio/shellescape => al.essio.dev/pkg/shellescape v1.6.0
 require (
 	github.com/giantswarm/apptest-framework/v4 v4.2.0
 	github.com/giantswarm/apptest-framework/v5 v5.3.0
-	github.com/giantswarm/clustertest/v5 v5.6.0
+	github.com/giantswarm/clustertest/v4 v4.3.1
 	github.com/giantswarm/clustertest/v5 v5.6.0
 	github.com/onsi/ginkgo/v2 v2.33.0
 	github.com/onsi/gomega v1.44.0
