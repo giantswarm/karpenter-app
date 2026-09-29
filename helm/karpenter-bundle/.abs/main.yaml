@@ -1,0 +1,7 @@
+catalog-base-url: https://giantswarm.github.io/default-catalog/
+destination: ./build
+generate-metadata: true
+replace-chart-version-with-git: true
+replace-app-version-with-git: true
+# Templates `fail` when `lookup` finds no Crossplane config `ConfigMap`, which is always the case in `helm template`
+disable-helm-template-validator: true
