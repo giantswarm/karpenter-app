@@ -84,7 +84,7 @@ metadata:
   name: {cluster_id}-karpenter-bundle
   namespace: org-{org_name}
 spec:
-  catalog: giantswarm
+  catalog: default
   kubeConfig:
     inCluster: true
   name: karpenter-bundle
