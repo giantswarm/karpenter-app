@@ -1,3 +1,4 @@
+{{- if .Values.kyverno.enabled }}
 {{ if .Capabilities.APIVersions.Has "kyverno.io/v2/PolicyException" -}}
 apiVersion: kyverno.io/v2
 {{- else }}
@@ -64,3 +65,4 @@ spec:
             - {{ .Release.Namespace }}
           names:
             - karpenter*
+{{- end }}

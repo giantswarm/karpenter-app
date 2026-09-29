@@ -34,9 +34,19 @@ spec:
     kind: OCIRepository
     name: {{ .Values.clusterID }}-karpenter
     namespace: {{ .Release.Namespace }}
-  {{- if .Values.helmRelease.dependsOn }}
+  {{- /* `dependsOn` is templated so that a dependency can be made conditional */}}
+  {{- $dependsOn := list }}
+  {{- range $dependency, $enabled := .Values.helmRelease.dependsOn }}
+  {{- if kindIs "string" $enabled }}
+  {{- $enabled = eq (tpl $enabled $ | trim) "true" }}
+  {{- end }}
+  {{- if $enabled }}
+  {{- $dependsOn = append $dependsOn $dependency }}
+  {{- end }}
+  {{- end }}
+  {{- if $dependsOn }}
   dependsOn:
-  {{- range .Values.helmRelease.dependsOn }}
+  {{- range $dependsOn }}
   - name: {{ include "karpenter-bundle.clusterID" $ }}-{{ . }}
     namespace: {{ $.Release.Namespace }}
   {{- end }}

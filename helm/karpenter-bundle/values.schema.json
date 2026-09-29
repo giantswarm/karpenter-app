@@ -10,10 +10,23 @@
             "type": "object",
             "properties": {
                 "dependsOn": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
+                    "type": "object",
+                    "description": "HelmReleases the karpenter HelmRelease depends on, keyed by name without the cluster ID prefix. Each value is evaluated as a Go template, so a dependency can be made conditional; only values resulting in `true` are kept.",
+                    "additionalProperties": {
+                        "type": [
+                            "boolean",
+                            "string"
+                        ]
                     }
+                }
+            }
+        },
+        "kyverno": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Whether Kyverno is installed in the workload cluster. When disabled, the karpenter HelmRelease does not wait for the `kyverno-crds` dependency and the chart renders no `PolicyException`, since both need Kyverno's CRDs."
                 }
             }
         },

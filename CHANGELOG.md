@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add `iam:CreateServiceLinkedRole` permission to the Karpenter IAM role, scoped to the `AWSServiceRoleForEC2Spot` service-linked role, so Karpenter can create such role when launching spot instances in accounts where it does not exist yet.
+- Support karpenter on EKS clusters
+
+  - Add `eks:DescribeCluster` permission to discover the cluster endpoint
+  - Conditionally depend on Kyverno and pod logs CRDs since security-bundle isn't yet implemented for cluster-eks and customers may disable that bundle and also observability-bundle for cluster adoption cases
+
+### Fixed
+
+- Strip `-`, `_`, and `.` from the `helm.sh/chart` label to support dev versions
 
 ## [2.4.1] - 2026-08-21
 

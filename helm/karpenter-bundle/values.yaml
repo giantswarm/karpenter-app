@@ -5,11 +5,12 @@ region: ""
 workersIamRole: ""
 ociRepositoryUrl: oci://gsoci.azurecr.io/charts/giantswarm/karpenter
 helmRelease:
+  # Each value is evaluated as a Go template. Dependencies whose value does not result in `true` are skipped.
   dependsOn:
-  - alloy-podlogs-crds
-  - cilium
-  - cloud-provider-aws
-  - kyverno-crds
+    alloy-podlogs-crds: '{{ $.Values.podLogs.enabled }}'
+    cilium: true
+    cloud-provider-aws: true
+    kyverno-crds: '{{ $.Values.kyverno.enabled }}'
 
 # ─── UPSTREAM ────────────────────────────────────────────────────────────────
 # These values are transformed and routed under the `upstream:` key to the workload chart.
@@ -46,6 +47,9 @@ proxy:
 
 # ─── EXTRAS ──────────────────────────────────────────────────────────────────
 # These values are forwarded at top level (not under upstream:) to the workload chart.
+kyverno:
+  # Whether Kyverno is installed. Without it, both the `PolicyException` and the `kyverno-crds` dependency are skipped.
+  enabled: true
 podLogs:
   enabled: false
   tenant: ""
