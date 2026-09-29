@@ -84,7 +84,7 @@ metadata:
   name: {cluster_id}-karpenter-bundle
   namespace: org-{org_name}
 spec:
-  catalog: giantswarm
+  catalog: default
   kubeConfig:
     inCluster: true
   name: karpenter-bundle
@@ -97,7 +97,7 @@ spec:
 - `helm dependency update helm/karpenter/` — fetch upstream chart
 - `helm template helm/karpenter/ -f helm/karpenter/ci/ci-values.yaml` — render workload chart
 - `helm lint helm/karpenter/`
-- `helm lint helm/karpenter-bundle/ -f helm/karpenter-bundle/ci/values.yaml`
+- `helm lint helm/karpenter-bundle/ -f helm/karpenter-bundle/ci/ci-values.yaml`
 
 ## Credit
 
