@@ -17,8 +17,8 @@ helmRelease:
 controller:
   image:
     repository: gsoci.azurecr.io/giantswarm/karpenter-controller
-    tag: "1.8.1"
-    digest: "sha256:35044629d7b890852fd770a8f69b303f3cbbd5695beef5af670faab1da269b17"
+    tag: "1.14.1"
+    digest: "sha256:445baefaaa689029cc12ac1f659b916b0b82fb14308ce536f8521fcf079116fa"
   resources:
     requests:
       cpu: 0.1
