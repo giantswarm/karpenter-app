@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `ec2:DescribeInstanceStatus` permission to the Karpenter IAM role, which Karpenter requires since v1.12 for its interruption health checks.
+
+### Changed
+
+- Update upstream Karpenter and its CRDs to v1.14.1. This might roll nodes because Karpenter v1.12 bumps the `EC2NodeClass` hash version from v4 to v5, which can mark existing nodes as drifted.
+- Enable the `StaticCapacity` feature gate (`NodePool.spec.replicas`) in the `karpenter` chart defaults, as already done in `karpenter-bundle`. The feature is still alpha upstream, and we offer it as tech preview.
+
 ## [2.5.0] - 2026-09-29
 
 ### Added
