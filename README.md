@@ -21,7 +21,7 @@ Management Cluster (Bundle)                 Workload Cluster (Karpenter)
 │  karpenter-bundle chart         │        │  karpenter chart                 │
 │                                 │        │                                  │
 │  ┌─────────────────────────┐    │   Flux │  ┌────────────────────────────┐  │
-│  │ ConfigMap               │────│───────>│  │ upstream (karpenter v1.8.1)│  │
+│  │ ConfigMap               │────│───────>│  │ upstream (karpenter 1.14.1)│  │
 │  │ (workload values)       │    │        │  │ - Deployment               │  │
 │  └─────────────────────────┘    │        │  │ - ServiceAccount (IRSA)    │  │
 │                                 │        │  │ - RBAC                     │  │

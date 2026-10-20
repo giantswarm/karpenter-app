@@ -8,6 +8,10 @@ upstream:
     - apiGroups: [""]
       resources: ["nodes/finalizers"]
       verbs: ["update"]
+  settings:
+    featureGates:
+      # Alpha upstream, offered as tech preview
+      staticCapacity: true
 
 upstream-crd:
   additionalAnnotations:
