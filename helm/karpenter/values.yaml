@@ -24,6 +24,11 @@ upstream-crd:
 kyverno:
   # The `PolicyException` needs Kyverno's CRDs, which only exist if Kyverno is installed
   enabled: true
+kyvernoPolicyExceptions:
+  enabled: true
+  legacy:
+    # Renders the kyverno.io/v2 PolicyException, which applies to ClusterPolicies only. Will be used as a global switch in a future release.
+    enabled: true
 podLogs:
   enabled: false
   tenant: ""
